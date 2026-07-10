@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#111111">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="GWA">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <title>Global Work Agency</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black: #111;
+      --green: #16a34a;
+      --green-bg: #dcfce7;
+      --red: #dc2626;
+      --red-bg: #fee2e2;
+      --amber: #d97706;
+      --amber-bg: #fef3c7;
+      --border: #e5e7eb;
+      --gray: #f4f4f5;
+      --muted: #6b7280;
+      --text: #111827;
+      --r: 16px;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bot: env(safe-area-inset-bottom, 0px);
+    }
+    html, body {
+      height: 100%; font-family: -apple-system, "Segoe UI", Montserrat, sans-serif;
+      background: #f9fafb; color: var(--text); overflow-x: hidden;
+    }
+
+    /* ── PANTALLAS ── */
+    .screen {
+      display: none; min-height: 100dvh;
+      flex-direction: column; background: #f9fafb;
+    }
+    .screen.active { display: flex; }
+
+    /* ── HEADER ── */
+    .app-header {
+      background: var(--black); color: #fff;
+      padding: calc(var(--safe-top) + 20px) 20px 20px;
+      display: flex; align-items: center; gap: 14px; flex-shrink: 0;
+    }
+    .back-btn {
+      width: 36px; height: 36px; background: rgba(255,255,255,.12);
+      border: none; border-radius: 50%; color: #fff; font-size: 20px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .header-info h1 { font-size: 17px; font-weight: 700; }
+    .header-info p  { font-size: 12px; opacity: .6; margin-top: 2px; }
+
+    /* ── SCROLL ── */
+    .scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+      padding: 20px 20px calc(var(--safe-bot) + 100px); }
+
+    /* ── LOGO HERO ── */
+    .hero {
+      background: var(--black);
+      padding: calc(var(--safe-top) + 48px) 20px 48px;
+      display: flex; flex-direction: column; align-items: center; gap: 16px;
+    }
+    .hero img { height: 60px; width: auto; object-fit: contain; }
+    .hero h2  { color: #fff; font-size: 20px; font-weight: 800; text-align: center; }
+    .hero p   { color: rgba(255,255,255,.6); font-size: 14px; text-align: center; }
+
+    /* ── CARDS ── */
+    .card {
+      background: #fff; border-radius: var(--r);
+      border: 1px solid var(--border); padding: 20px; margin-bottom: 14px;
+    }
+    .card-title {
+      font-size: 11px; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: .6px; margin-bottom: 14px;
+    }
+
+    /* ── INPUTS ── */
+    .campo { margin-bottom: 16px; }
+    .campo label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+    .campo input, .campo select, .campo textarea {
+      width: 100%; padding: 14px 16px;
+      border: 1.5px solid var(--border); border-radius: 12px;
+      font-size: 16px; font-family: inherit; color: var(--text);
+      background: #fff; outline: none; -webkit-appearance: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .campo input:focus, .campo select:focus, .campo textarea:focus {
+      border-color: var(--black); box-shadow: 0 0 0 3px rgba(0,0,0,.06);
+    }
+    .campo textarea { min-height: 80px; resize: vertical; line-height: 1.5; }
+    .campo select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center; padding-right: 38px;
+    }
+    .campo input.locked {
+      background: #f3f4f6; color: #6b7280; pointer-events: none; border-style: dashed;
+    }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
+
+    /* ── BOTONES ── */
+    .btn {
+      width: 100%; padding: 16px; border-radius: 50px; border: none;
+      font-size: 15px; font-weight: 700; cursor: pointer;
+      transition: opacity .2s, transform .1s; font-family: inherit;
+    }
+    .btn:active { transform: scale(.97); opacity: .85; }
+    .btn-primary  { background: var(--black); color: #fff; }
+    .btn-secondary { background: var(--gray); color: var(--black); }
+    .btn-green    { background: var(--green); color: #fff; }
+    .btn:disabled { opacity: .4; pointer-events: none; }
+
+    /* ── BOTTOM BAR ── */
+    .bottom-bar {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: #fff; border-top: 1px solid var(--border);
+      padding: 12px 20px calc(var(--safe-bot) + 12px);
+      display: flex; gap: 10px; z-index: 200;
+    }
+    .btn-sm { flex: 0 0 90px; padding: 14px 12px; font-size: 14px; }
+
+    /* ── OTP INPUT ── */
+    .otp-grid { display: flex; gap: 10px; justify-content: center; margin: 24px 0; }
+    .otp-digit {
+      width: 48px; height: 58px; border: 2px solid var(--border);
+      border-radius: 12px; font-size: 24px; font-weight: 700;
+      text-align: center; font-family: inherit; color: var(--text);
+      background: #fff; outline: none; transition: border-color .2s;
+    }
+    .otp-digit:focus { border-color: var(--black); }
+
+    /* ── BARRA DE PROGRESO ── */
+    .progress-track {
+      height: 10px; background: var(--gray); border-radius: 99px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; border-radius: 99px;
+      transition: width .6s ease; background: var(--black);
+    }
+    .progress-fill.green { background: var(--green); }
+
+    /* ── ETAPAS DEL PROCESO ── */
+    .etapas { display: flex; align-items: center; margin: 16px 0 8px; }
+    .etapa-dot {
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 2.5px solid var(--border); background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: var(--muted);
+      flex-shrink: 0; transition: all .3s;
+    }
+    .etapa-dot.done { background: var(--black); border-color: var(--black); color: #fff; }
+    .etapa-dot.active { border-color: var(--black); color: var(--black); box-shadow: 0 0 0 3px rgba(0,0,0,.1); }
+    .etapa-linea { flex: 1; height: 2.5px; background: var(--border); transition: background .3s; }
+    .etapa-linea.done { background: var(--black); }
+    .etapas-labels { display: flex; justify-content: space-between; }
+    .etapa-label { font-size: 10px; color: var(--muted); font-weight: 600; text-align: center; flex: 1; }
+    .etapa-label.active { color: var(--black); }
+
+    /* ── DOCUMENTOS ── */
+    .doc-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px; border-radius: 12px;
+      border: 1.5px solid var(--border); margin-bottom: 10px;
+      background: #fff; cursor: pointer; transition: border-color .2s;
+    }
+    .doc-item.ok    { border-color: var(--green); background: #f0fdf4; cursor: default; }
+    .doc-item.missing { border-color: var(--amber); background: #fffbeb; }
+    .doc-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0; background: var(--gray);
+    }
+    .doc-item.ok    .doc-icon { background: var(--green-bg); }
+    .doc-item.missing .doc-icon { background: var(--amber-bg); }
+    .doc-info label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 3px; }
+    .doc-status { font-size: 12px; color: var(--muted); }
+    .doc-status.ok      { color: var(--green); font-weight: 600; }
+    .doc-status.missing { color: var(--amber); font-weight: 600; }
+    .doc-upload-btn {
+      margin-left: auto; font-size: 12px; font-weight: 700;
+      padding: 6px 12px; border-radius: 20px; border: none;
+      background: var(--amber); color: #fff; cursor: pointer; flex-shrink: 0;
+    }
+    .file-hidden { display: none; }
+
+    /* ── NOTIFICACIONES ── */
+    .notif-item {
+      padding: 14px; border-radius: 12px;
+      border: 1px solid var(--border); margin-bottom: 10px;
+      background: #fff;
+    }
+    .notif-item.nueva { border-left: 3px solid var(--black); }
+    .notif-meta { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+    .notif-texto { font-size: 14px; line-height: 1.5; }
+
+    /* ── FLOAT BUTTONS ── */
+    .float-btns {
+      position: fixed; right: 20px; bottom: 100px;
+      display: flex; flex-direction: column; gap: 12px; z-index: 300;
+    }
+    .float-btn {
+      width: 52px; height: 52px; border-radius: 50%; border: none;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,.2);
+      text-decoration: none;
+    }
+    .float-btn.wa    { background: #25D366; }
+    .float-btn.ayuda { background: var(--black); color: #fff; }
+
+    /* ── STEPS ── */
+    .steps-wrap { background: var(--black); padding: 0 20px 16px; flex-shrink: 0; }
+    .steps-row  { display: flex; align-items: center; }
+    .step-dot {
+      width: 26px; height: 26px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,.3);
+      color: rgba(255,255,255,.4); font-size: 11px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .step-dot.done   { background: #fff; border-color: #fff; color: var(--black); }
+    .step-dot.active { border-color: #fff; color: #fff; box-shadow: 0 0 0 3px rgba(255,255,255,.2); }
+    .step-line { flex: 1; height: 2px; background: rgba(255,255,255,.2); }
+    .step-line.done { background: #fff; }
+    .step-label { color: rgba(255,255,255,.6); font-size: 11px; margin-top: 8px; }
+    .step-label span { color: #fff; font-weight: 700; }
+
+    /* ── ARCHIVOS FORMULARIO ── */
+    .file-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px; background: #fff;
+      border: 1.5px solid var(--border); border-radius: 12px;
+      margin-bottom: 10px; cursor: pointer; transition: border-color .2s;
+    }
+    .file-item.ok { border-color: var(--green); }
+    .file-icon-wrap {
+      width: 40px; height: 40px; background: var(--gray);
+      border-radius: 10px; display: flex; align-items: center;
+      justify-content: center; font-size: 20px; flex-shrink: 0;
+    }
+    .file-item.ok .file-icon-wrap { background: var(--green-bg); }
+    .file-item-info label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 3px; }
+    .file-st { font-size: 12px; color: var(--muted); }
+    .file-st.ok { color: var(--green); font-weight: 600; }
+
+    /* ── PRECIO ROW ── */
+    .precio-row { display: flex; gap: 10px; }
+    .precio-row select { width: 110px; flex-shrink: 0; }
+    .precio-row input  { flex: 1; }
+
+    /* ── AVATAR ── */
+    .avatar {
+      width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,.18);
+      color: #fff; font-size: 17px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+
+    /* ── PAGO INFO ── */
+    .pago-nums { display: flex; gap: 0; margin: 14px 0 10px; }
+    .pago-num { flex: 1; text-align: center; }
+    .pago-num .valor { font-size: 18px; font-weight: 800; color: var(--black); }
+    .pago-num .lbl   { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .pago-num + .pago-num { border-left: 1px solid var(--border); }
+
+    /* ── SIN PROCESO ── */
+    .empty-state {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 40px 30px; text-align: center; gap: 16px;
+    }
+    .empty-icon { font-size: 56px; }
+    .empty-state h2 { font-size: 22px; font-weight: 800; }
+    .empty-state p  { font-size: 14px; color: var(--muted); line-height: 1.6; max-width: 280px; }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: 110px; left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: #222; color: #fff;
+      padding: 11px 22px; border-radius: 50px;
+      font-size: 14px; font-weight: 600;
+      opacity: 0; pointer-events: none;
+      transition: all .3s; white-space: nowrap; z-index: 9999;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── LOADER ── */
+    #loader {
+      display: none; position: fixed; inset: 0;
+      background: rgba(255,255,255,.95); z-index: 9998;
+      flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+    }
+    #loader.show { display: flex; }
+    .spinner {
+      width: 46px; height: 46px;
+      border: 4px solid var(--border); border-top-color: var(--black);
+      border-radius: 50%; animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loader p { font-size: 15px; font-weight: 600; color: var(--text); }
+
+    /* ── PAGO EXITOSO ── */
+    .success-wrap {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 40px 30px; text-align: center;
+    }
+    .success-icon-big {
+      width: 80px; height: 80px; background: var(--green); border-radius: 50%;
+      color: #fff; font-size: 36px;
+      display: flex; align-items: center; justify-content: center; margin-bottom: 24px;
+      animation: popIn .4s cubic-bezier(.175,.885,.32,1.275) forwards;
+    }
+    @keyframes popIn { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 480px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .otp-digit { width: 44px; height: 54px; font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     PANTALLA 1 — LOGIN
+══════════════════════════════════════════ -->
+<div class="screen active" id="screenLogin">
+  <div class="hero">
+    <img src="logo.png" alt="Global Work Agency">
+    <h2>Mi proceso GWA</h2>
+    <p>Consulta el estado de tu proceso de movilidad laboral</p>
+  </div>
+  <div class="scroll" style="padding-top:32px;">
+    <div class="campo">
+      <label>Número de celular</label>
+      <input type="tel" id="inputTelefono" placeholder="+57 300 000 0000"
+             autocomplete="tel" inputmode="tel">
+    </div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.5;">
+      Te enviaremos un código de verificación por SMS al número que ingreses.
+    </p>
+    <button class="btn btn-primary" onclick="enviarOTP()">Enviar código →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PANTALLA 2 — OTP
+══════════════════════════════════════════ -->
+<div class="screen" id="screenOtp">
+  <div class="hero">
+    <img src="logo.png" alt="Global Work Agency">
+    <h2>Código de verificación</h2>
+    <p id="otpSubtitulo">Ingresa el código que enviamos a tu celular</p>
+  </div>
+  <div class="scroll" style="padding-top:32px; text-align:center;">
+    <div class="otp-grid" id="otpGrid">
+      <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]">
+    </div>
+    <button class="btn btn-primary" onclick="verificarOTP()" style="margin-bottom:16px;">Verificar →</button>
+    <button class="btn btn-secondary" onclick="reenviarOTP()" id="btnReenviar">Reenviar código</button>
+    <p style="margin-top:16px;font-size:13px;color:var(--muted);">
+      <span style="cursor:pointer;text-decoration:underline;" onclick="irA('screenLogin')">← Cambiar número</span>
+    </p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PANTALLA 3 — DASHBOARD (con proceso)
+══════════════════════════════════════════ -->
+<div class="screen" id="screenDashboard">
+  <header class="app-header">
+    <div class="avatar" id="dashAvatar">?</div>
+    <div class="header-info">
+      <h1 id="dashNombre">Mi proceso</h1>
+      <p id="dashAsesor">Global Work Agency</p>
+    </div>
+    <button class="back-btn" style="margin-left:auto;" onclick="cerrarSesion()" title="Cerrar sesión">⎋</button>
+  </header>
+
+  <div class="scroll">
+
+    <!-- PROGRESO DEL PROCESO -->
+    <div class="card">
+      <div class="card-title">Estado de tu proceso</div>
+      <div class="etapas" id="etapasWrap">
+        <!-- generado por JS -->
+      </div>
+      <div class="etapas-labels" id="etapasLabels">
+        <span class="etapa-label">Perfilado</span>
+        <span class="etapa-label">Documentos</span>
+        <span class="etapa-label">En proceso</span>
+        <span class="etapa-label">Finalizado</span>
+      </div>
+      <p id="etapaTexto" style="font-size:13px;color:var(--muted);margin-top:10px;"></p>
+    </div>
+
+    <!-- PROGRESO DE PAGO -->
+    <div class="card">
+      <div class="card-title">Estado de pagos</div>
+      <div class="pago-nums" id="pagoNums">
+        <div class="pago-num"><div class="valor" id="pagadoVal">$0</div><div class="lbl">Pagado</div></div>
+        <div class="pago-num"><div class="valor" id="restanteVal">$0</div><div class="lbl">Restante</div></div>
+        <div class="pago-num"><div class="valor" id="totalVal">$0</div><div class="lbl">Total</div></div>
+      </div>
+      <div class="progress-track" style="margin-bottom:6px;">
+        <div class="progress-fill green" id="pagoBar" style="width:0%"></div>
+      </div>
+      <p style="font-size:12px;color:var(--muted);text-align:right;" id="pagoPct">0% pagado</p>
+    </div>
+
+    <!-- DOCUMENTOS -->
+    <div class="card">
+      <div class="card-title">Mis documentos</div>
+      <div id="docsWrap">
+        <!-- generado por JS -->
+      </div>
+    </div>
+
+    <!-- ABONOS -->
+    <div class="card" id="cardAbonos" style="display:none;">
+      <div class="card-title">Historial de abonos</div>
+      <div id="abonosWrap"></div>
+      <button class="btn btn-primary" style="margin-top:10px;" onclick="irA('screenAbono')">+ Registrar abono</button>
+    </div>
+
+    <!-- NOTIFICACIONES -->
+    <div class="card">
+      <div class="card-title">Notificaciones <span id="badgeNotif" style="background:var(--black);color:#fff;border-radius:99px;padding:1px 8px;font-size:11px;display:none;"></span></div>
+      <div id="notifsWrap">
+        <p style="color:var(--muted);font-size:13px;">Sin notificaciones por ahora.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOTONES FLOTANTES -->
+  <div class="float-btns">
+    <a class="float-btn wa" id="btnWA" href="https://wa.me/17867788242" target="_blank" title="WhatsApp asesor">💬</a>
+    <button class="float-btn ayuda" onclick="toast('¿Necesitas ayuda? Escribe a tu asesor por WhatsApp.')">❓</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PANTALLA 4 — SIN PROCESO
+══════════════════════════════════════════ -->
+<div class="screen" id="screenSinProceso">
+  <header class="app-header">
+    <div class="avatar" id="spAvatar">?</div>
+    <div class="header-info">
+      <h1 id="spNombre">Mi proceso</h1>
+      <p>Global Work Agency</p>
+    </div>
+    <button class="back-btn" style="margin-left:auto;" onclick="cerrarSesion()" title="Cerrar sesión">⎋</button>
+  </header>
+
+  <div class="empty-state">
+    <div class="empty-icon">🌍</div>
+    <h2>¡Bienvenido a GWA!</h2>
+    <p>Aún no tienes un proceso activo. Inicia tu perfilamiento y comienza tu camino hacia Europa.</p>
+    <button class="btn btn-primary" style="max-width:300px;" onclick="irAPerfilamiento()">
+      Iniciar mi proceso →
+    </button>
+    <a class="float-btn wa" href="https://wa.me/17867788242" target="_blank"
+       style="margin-top:10px;width:auto;border-radius:30px;padding:12px 20px;font-size:14px;font-weight:700;gap:8px;display:flex;align-items:center;">
+      💬 Hablar con un asesor
+    </a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PANTALLA 5 — PERFILAMIENTO (5 pasos)
+══════════════════════════════════════════ -->
+<div class="screen" id="screenPerfilamiento">
+
+  <header class="app-header">
+    <button class="back-btn" onclick="irA('screenSinProceso')">‹</button>
+    <div class="header-info">
+      <h1>Perfilamiento</h1>
+      <p>Completa los 5 pasos</p>
+    </div>
+  </header>
+
+  <div class="steps-wrap">
+    <div class="steps-row" id="stepsRow"></div>
+    <div class="step-label" id="stepLabel"></div>
+  </div>
+
+  <div class="scroll" id="perfScroll">
+
+    <!-- PASO 1 -->
+    <div class="perf-step active" data-step="0">
+      <div class="form-grid">
+        <div class="campo">
+          <label>Fecha de carga</label>
+          <input type="date" name="fechaCarga" class="locked" readonly tabindex="-1">
+        </div>
+        <div class="campo">
+          <label>Mes de carga</label>
+          <input type="text" name="mesCarga" class="locked" readonly tabindex="-1">
+        </div>
+      </div>
+      <div class="campo">
+        <label>País destino <span style="color:#e53e3e">*</span></label>
+        <select name="pais" id="paisPerfil" required>
+          <option value="">Seleccionar</option>
+          <option>Croacia</option><option>Polonia</option><option>Hungría</option>
+          <option>Eslovaquia</option><option>R. checa</option><option>Canada</option>
+          <option>Suiza</option><option>España</option><option>Bélgica</option>
+          <option>Estados Unidos</option><option>Alemania</option><option>Francia</option>
+        </select>
+      </div>
+      <div class="campo" id="campoProceso" style="display:none;">
+        <label>Tipo de proceso</label>
+        <select name="tipoProceso">
+          <option value="">Seleccionar</option>
+          <option value="1_mes">Proceso a 1 mes</option>
+          <option value="3_meses">Proceso a 3 meses</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label>Divisa de pago <span style="color:#e53e3e">*</span></label>
+        <select name="divisa" id="divisaPerfil" required>
+          <option value="COP">$ COP — $90.000</option>
+          <option value="USD">$ USD — $32</option>
+          <option value="EUR">€ EUR — €28</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- PASO 2 -->
+    <div class="perf-step" data-step="1">
+      <div class="campo"><label>Nombre completo <span style="color:#e53e3e">*</span></label>
+        <input type="text" name="name" placeholder="Tu nombre y apellidos" required></div>
+      <div class="campo"><label>Ciudad de residencia <span style="color:#e53e3e">*</span></label>
+        <input type="text" name="ciudadResidencia" placeholder="Ciudad" required></div>
+      <div class="form-grid">
+        <div class="campo"><label>Fecha de nacimiento <span style="color:#e53e3e">*</span></label>
+          <input type="date" name="fechaNacimiento" required></div>
+        <div class="campo"><label>Edad <span style="color:#e53e3e">*</span></label>
+          <input type="number" name="edad" min="18" max="80" placeholder="18" required></div>
+      </div>
+      <div class="form-grid">
+        <div class="campo"><label>Sexo <span style="color:#e53e3e">*</span></label>
+          <select name="sexo" required>
+            <option value="">Selecciona</option>
+            <option>Masculino</option><option>Femenino</option><option>Otro</option>
+          </select></div>
+        <div class="campo"><label>Nacionalidad <span style="color:#e53e3e">*</span></label>
+          <select name="nacionalidad" required>
+            <option value="">Selecciona</option>
+            <option>Colombiana</option><option>Venezolana</option><option>Ecuatoriana</option>
+            <option>Peruana</option><option>Boliviana</option><option>Chilena</option>
+            <option>Argentina</option><option>Mexicana</option><option>Guatemalteca</option>
+            <option>Hondureña</option><option>Salvadoreña</option><option>Nicaragüense</option>
+            <option>Costarricense</option><option>Panameña</option><option>Cubana</option>
+            <option>Dominicana</option><option>Puertorriqueña</option><option>Paraguaya</option>
+            <option>Uruguaya</option><option>Brasileña</option><option>Haitiana</option>
+          </select></div>
+      </div>
+      <div class="form-grid">
+        <div class="campo"><label>Tipo de documento <span style="color:#e53e3e">*</span></label>
+          <select name="tipoDocumento" required>
+            <option value="">Tipo</option>
+            <option>Cédula de ciudadanía</option><option>Tarjeta de identidad</option>
+            <option>Cédula de extranjería</option><option>Pasaporte</option>
+          </select></div>
+        <div class="campo"><label>Número <span style="color:#e53e3e">*</span></label>
+          <input type="text" name="documento" placeholder="Número" required></div>
+      </div>
+      <div class="campo"><label>Celular <span style="color:#e53e3e">*</span></label>
+        <input type="tel" name="telefono" id="perfTelefono" placeholder="+57 300 000 0000" required></div>
+      <div class="campo"><label>Correo electrónico</label>
+        <input type="email" name="email" placeholder="correo@ejemplo.com"></div>
+      <div class="campo"><label>Dirección <span style="color:#e53e3e">*</span></label>
+        <input type="text" name="direccion" placeholder="Dirección completa" required></div>
+      <div class="campo"><label>Profesión <span style="color:#e53e3e">*</span></label>
+        <input type="text" name="profesion" placeholder="Profesión u oficio" required></div>
+    </div>
+
+    <!-- PASO 3 -->
+    <div class="perf-step" data-step="2">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.5;">
+        Sube cada documento en formato PDF. Todos son obligatorios para continuar.
+      </p>
+      <div class="file-item" id="fi-acuerdo" onclick="triggerUpload('acuerdo')">
+        <div class="file-icon-wrap">📄</div>
+        <div class="file-item-info">
+          <label>Acuerdo de voluntades</label>
+          <div class="file-st" id="fs-acuerdo">Sin archivo</div>
+        </div>
+        <input type="file" name="acuerdo" accept="application/pdf" class="file-hidden" id="file-acuerdo" required onchange="onFileChange('acuerdo',this)">
+      </div>
+      <div class="file-item" id="fi-cv" onclick="triggerUpload('cv')">
+        <div class="file-icon-wrap">📋</div>
+        <div class="file-item-info">
+          <label>Hoja de vida</label>
+          <div class="file-st" id="fs-cv">Sin archivo</div>
+        </div>
+        <input type="file" name="cv" accept="application/pdf" class="file-hidden" id="file-cv" required onchange="onFileChange('cv',this)">
+      </div>
+      <div class="file-item" id="fi-doc" onclick="triggerUpload('doc')">
+        <div class="file-icon-wrap">🪪</div>
+        <div class="file-item-info">
+          <label>Documento de identidad</label>
+          <div class="file-st" id="fs-doc">Sin archivo</div>
+        </div>
+        <input type="file" name="doc" accept="application/pdf" class="file-hidden" id="file-doc" required onchange="onFileChange('doc',this)">
+      </div>
+      <div class="file-item" id="fi-pasaporte" onclick="triggerUpload('pasaporte')">
+        <div class="file-icon-wrap">🛂</div>
+        <div class="file-item-info">
+          <label>Pasaporte</label>
+          <div class="file-st" id="fs-pasaporte">Sin archivo</div>
+        </div>
+        <input type="file" name="pasaporte" accept="application/pdf" class="file-hidden" id="file-pasaporte" required onchange="onFileChange('pasaporte',this)">
+      </div>
+      <div class="file-item" id="fi-pago" onclick="triggerUpload('pago')">
+        <div class="file-icon-wrap">💳</div>
+        <div class="file-item-info">
+          <label>Soporte de pago del perfilamiento</label>
+          <div class="file-st" id="fs-pago">Sin archivo</div>
+        </div>
+        <input type="file" name="pago" accept="application/pdf" class="file-hidden" id="file-pago" required onchange="onFileChange('pago',this)">
+      </div>
+    </div>
+
+    <!-- PASO 4 -->
+    <div class="perf-step" data-step="3">
+      <div class="campo"><label>Número de pasaporte</label>
+        <input type="text" name="numeroPasaporte" placeholder="AB123456"></div>
+      <div class="campo"><label>¿Pasaporte vigente?</label>
+        <select name="vigente">
+          <option value="">Seleccionar</option><option>Sí</option><option>No</option>
+        </select></div>
+      <div class="form-grid">
+        <div class="campo"><label>Fecha expedición</label>
+          <input type="date" name="fechaExpedicion"></div>
+        <div class="campo"><label>Fecha vencimiento</label>
+          <input type="date" name="fechaVencimiento"></div>
+      </div>
+    </div>
+
+    <!-- PASO 5 -->
+    <div class="perf-step" data-step="4">
+      <div class="form-grid">
+        <div class="campo"><label>¿Viaja con pareja?</label>
+          <select name="pareja"><option value="no">No</option><option value="si">Sí</option></select></div>
+        <div class="campo"><label>Nombre acompañante</label>
+          <input type="text" name="acompanante" placeholder="Nombre"></div>
+        <div class="campo"><label>¿Sabe inglés?</label>
+          <select name="ingles"><option value="no">No</option><option value="si">Sí</option></select></div>
+        <div class="campo"><label>¿Puede conversar?</label>
+          <select name="conversacion"><option value="no">No</option><option value="si">Sí</option></select></div>
+      </div>
+      <div class="card" style="margin-bottom:14px;">
+        <div class="card-title">Contacto de emergencia — Madre</div>
+        <div class="campo"><label>Nombre completo</label>
+          <input type="text" name="nombre_madre" placeholder="Nombre de la madre"></div>
+        <div class="campo"><label>Celular</label>
+          <input type="tel" name="celular_madre" placeholder="+57 300 000 0000"></div>
+      </div>
+      <div class="card" style="margin-bottom:14px;">
+        <div class="card-title">Contacto de emergencia — Padre</div>
+        <div class="campo"><label>Nombre completo</label>
+          <input type="text" name="nombre_padre" placeholder="Nombre del padre"></div>
+        <div class="campo"><label>Celular</label>
+          <input type="tel" name="celular_padre" placeholder="+57 300 000 0000"></div>
+      </div>
+      <div class="campo"><label>Experiencia laboral</label>
+        <textarea name="experiencia" placeholder="Describe tu experiencia relevante..."></textarea></div>
+      <div class="campo"><label>Comentarios</label>
+        <textarea name="comentarios" placeholder="Algo más que quieras decirnos..."></textarea></div>
+    </div>
+
+  </div>
+
+  <div class="bottom-bar">
+    <button class="btn btn-secondary btn-sm" id="btnPerfPrev" onclick="perfPrev()" style="display:none;">Atrás</button>
+    <button class="btn btn-primary" id="btnPerfNext" onclick="perfNext()">Continuar →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PANTALLA 6 — ABONO
+══════════════════════════════════════════ -->
+<div class="screen" id="screenAbono">
+  <header class="app-header">
+    <button class="back-btn" onclick="irA('screenDashboard')">‹</button>
+    <div class="header-info"><h1>Registrar abono</h1><p>Sube tu soporte de pago</p></div>
+  </header>
+  <div class="scroll">
+    <div class="campo">
+      <label>Valor del abono</label>
+      <input type="number" id="abonoValor" placeholder="Ej: 500000" min="0">
+    </div>
+    <div class="campo">
+      <label>Soporte de pago (PDF)</label>
+      <div class="file-item" id="fi-abonoDoc" onclick="document.getElementById('file-abonoDoc').click()">
+        <div class="file-icon-wrap">💳</div>
+        <div class="file-item-info">
+          <label>Soporte PDF</label>
+          <div class="file-st" id="fs-abonoDoc">Sin archivo</div>
+        </div>
+        <input type="file" name="pdfAbono" accept="application/pdf" class="file-hidden" id="file-abonoDoc"
+               onchange="onFileChange('abonoDoc',this)">
+      </div>
+    </div>
+  </div>
+  <div class="bottom-bar">
+    <button class="btn btn-primary" onclick="enviarAbono()">Guardar abono</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PANTALLA 7 — ESPERANDO PAGO
+══════════════════════════════════════════ -->
+<div class="screen" id="screenEsperandoPago">
+  <div class="success-wrap">
+    <div style="font-size:56px;margin-bottom:20px;">⏳</div>
+    <h2 style="font-size:22px;font-weight:800;margin-bottom:10px;">Redirigiendo al pago</h2>
+    <p style="color:var(--muted);font-size:14px;line-height:1.6;max-width:280px;margin-bottom:28px;">
+      Serás redirigido a la pasarela de pago Bold para completar tu proceso.
+    </p>
+    <div class="spinner"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TOAST / LOADER
+══════════════════════════════════════════ -->
+<div id="toast"></div>
+<div id="loader"><div class="spinner"></div><p id="loaderMsg">Cargando...</p></div>
+
+<script>
+/* ══════════════════════════════════════════
+   CONFIGURACIÓN
+══════════════════════════════════════════ */
+const BASE = "https://app.rioagencymarketing.com/webhook";
+const WH = {
+  login:    BASE + "/cliente-login",
+  otp:      BASE + "/cliente-verificar-otp",
+  dashboard:BASE + "/cliente-dashboard",
+  perfilamiento: BASE + "/cliente-iniciar-perfilamiento",
+  abono:    BASE + "/registrar-abono"
+};
+
+const ETAPAS = ["Perfilado","Documentos","En proceso","Finalizado"];
+const PERF_STEPS = ["Datos básicos","Datos personales","Documentos","Pasaporte","Familia"];
+let perfStep = 0;
+
+/* ══════════════════════════════════════════
+   SESIÓN
+══════════════════════════════════════════ */
+let sesion = null;
+try { sesion = JSON.parse(sessionStorage.getItem("gwa_sesion")); } catch(e){}
+
+/* ══════════════════════════════════════════
+   NAVEGACIÓN
+══════════════════════════════════════════ */
+function irA(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0, 0);
+}
+
+/* ══════════════════════════════════════════
+   LOGIN
+══════════════════════════════════════════ */
+async function enviarOTP() {
+  const tel = document.getElementById("inputTelefono").value.trim();
+  if (!tel || tel.length < 7) { toast("Ingresa un número válido"); return; }
+  showLoader("Enviando código...");
+  try {
+    const r = await post(WH.login, { telefono: tel });
+    if (r.ok) {
+      document.getElementById("otpSubtitulo").textContent = `Código enviado a ${tel}`;
+      hideLoader(); irA("screenOtp");
+      setTimeout(() => document.querySelector(".otp-digit").focus(), 300);
+    } else {
+      hideLoader(); toast(r.mensaje || "Error enviando código");
+    }
+  } catch(e) { hideLoader(); toast("Error de conexión"); }
+}
+
+/* ══════════════════════════════════════════
+   OTP INPUT HANDLING
+══════════════════════════════════════════ */
+document.querySelectorAll(".otp-digit").forEach((inp, i, arr) => {
+  inp.addEventListener("input", e => {
+    const v = inp.value.replace(/\D/g, "");
+    inp.value = v.slice(0, 1);
+    if (v && i < arr.length - 1) arr[i+1].focus();
+  });
+  inp.addEventListener("keydown", e => {
+    if (e.key === "Backspace" && !inp.value && i > 0) arr[i-1].focus();
+  });
+  inp.addEventListener("paste", e => {
+    e.preventDefault();
+    const text = (e.clipboardData || window.clipboardData).getData("text").replace(/\D/g,"");
+    arr.forEach((a, j) => { a.value = text[j] || ""; });
+    arr[Math.min(text.length, arr.length-1)].focus();
+  });
+});
+
+function getOTP() {
+  return [...document.querySelectorAll(".otp-digit")].map(i => i.value).join("");
+}
+
+async function verificarOTP() {
+  const otp = getOTP();
+  if (otp.length < 6) { toast("Ingresa el código completo"); return; }
+  const tel = document.getElementById("inputTelefono").value.trim();
+  showLoader("Verificando...");
+  try {
+    const r = await post(WH.otp, { telefono: tel, otp });
+    if (r.ok) {
+      sesion = { contactId: r.contactId, nombre: r.nombre.trim(), telefono: tel };
+      sessionStorage.setItem("gwa_sesion", JSON.stringify(sesion));
+      hideLoader();
+      cargarDashboard();
+    } else {
+      hideLoader(); toast(r.error || "Código incorrecto");
+    }
+  } catch(e) { hideLoader(); toast("Error de conexión"); }
+}
+
+async function reenviarOTP() {
+  document.querySelectorAll(".otp-digit").forEach(i => i.value = "");
+  await enviarOTP();
+}
+
+/* ══════════════════════════════════════════
+   DASHBOARD
+══════════════════════════════════════════ */
+async function cargarDashboard() {
+  if (!sesion) { irA("screenLogin"); return; }
+  showLoader("Cargando tu proceso...");
+  try {
+    const r = await post(WH.dashboard, { contactId: sesion.contactId });
+    hideLoader();
+    if (!r.ok) { toast("Error cargando datos"); return; }
+    if (!r.tieneProceso) {
+      // Sin proceso activo
+      const ini = (sesion.nombre || "?")[0].toUpperCase();
+      document.getElementById("spAvatar").textContent = ini;
+      document.getElementById("spNombre").textContent = sesion.nombre || "Mi cuenta";
+      irA("screenSinProceso"); return;
+    }
+    renderDashboard(r);
+    irA("screenDashboard");
+  } catch(e) { hideLoader(); toast("Error de conexión"); }
+}
+
+function renderDashboard(d) {
+  const ini = (sesion.nombre || d.nombre || "?")[0].toUpperCase();
+  document.getElementById("dashAvatar").textContent = ini;
+  document.getElementById("dashNombre").textContent = d.nombre || sesion.nombre;
+  document.getElementById("dashAsesor").textContent = d.asesor ? `Asesor: ${d.asesor}` : "Global Work Agency";
+
+  // Etapas
+  const etapaActual = d.proceso ? d.proceso.etapaIndex : -1;
+  const wrap = document.getElementById("etapasWrap");
+  wrap.innerHTML = "";
+  ETAPAS.forEach((_, i) => {
+    const dot = document.createElement("div");
+    dot.className = "etapa-dot" + (i < etapaActual ? " done" : i === etapaActual ? " active" : "");
+    dot.textContent = i < etapaActual ? "✓" : i + 1;
+    wrap.appendChild(dot);
+    if (i < ETAPAS.length - 1) {
+      const l = document.createElement("div");
+      l.className = "etapa-linea" + (i < etapaActual ? " done" : "");
+      wrap.appendChild(l);
+    }
+  });
+  document.querySelectorAll(".etapa-label").forEach((el, i) => {
+    el.classList.toggle("active", i === etapaActual);
+  });
+  document.getElementById("etapaTexto").textContent =
+    d.proceso ? `Etapa actual: ${d.proceso.etapaLabel}` : "Sin etapa asignada aún";
+
+  // Pago
+  const { total, pagado, restante, porcentaje } = d.pago || {};
+  document.getElementById("pagadoVal").textContent   = fmt(pagado);
+  document.getElementById("restanteVal").textContent = fmt(restante);
+  document.getElementById("totalVal").textContent    = fmt(total);
+  document.getElementById("pagoBar").style.width     = (porcentaje || 0) + "%";
+  document.getElementById("pagoPct").textContent     = (porcentaje || 0) + "% pagado";
+
+  // Documentos
+  const DOCS = [
+    { key: "acuerdo",   label: "Acuerdo de voluntades", icon: "📄" },
+    { key: "cv",        label: "Hoja de vida",           icon: "📋" },
+    { key: "documento", label: "Documento de identidad", icon: "🪪" },
+    { key: "pasaporte", label: "Pasaporte",              icon: "🛂" },
+    { key: "pagoPerfil",label: "Soporte de pago",        icon: "💳" }
+  ];
+  const docsWrap = document.getElementById("docsWrap");
+  docsWrap.innerHTML = "";
+  DOCS.forEach(({ key, label, icon }) => {
+    const link = d.documentos ? d.documentos[key] : null;
+    const div = document.createElement("div");
+    div.className = "doc-item " + (link ? "ok" : "missing");
+    div.innerHTML = `
+      <div class="doc-icon">${icon}</div>
+      <div class="doc-info" style="flex:1;">
+        <label>${label}</label>
+        <div class="doc-status ${link ? 'ok' : 'missing'}">${link ? "✓ Recibido" : "✗ Pendiente"}</div>
+      </div>
+      ${!link ? `<button class="doc-upload-btn" onclick="subirDocFaltante('${key}','${label}')">Subir</button>` : ""}
+    `;
+    docsWrap.appendChild(div);
+  });
+
+  // Abonos
+  if (d.abonos && d.abonos.length > 0) {
+    document.getElementById("cardAbonos").style.display = "";
+    const wrap = document.getElementById("abonosWrap");
+    wrap.innerHTML = "";
+    d.abonos.forEach(a => {
+      const div = document.createElement("div");
+      div.style.cssText = "padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;";
+      div.innerHTML = `<span style="font-size:13px;font-weight:600;">Abono #${a.numero}</span>
+        <span style="font-size:12px;color:var(--muted);">${a.fecha || ""}</span>
+        <a href="${a.link}" target="_blank" style="font-size:12px;color:var(--black);font-weight:700;">Ver PDF</a>`;
+      wrap.appendChild(div);
+    });
+  }
+
+  // Notificaciones (placeholder — se pobla si el workflow devuelve notifs)
+  if (d.notificaciones && d.notificaciones.length > 0) {
+    const nw = document.getElementById("notifsWrap");
+    nw.innerHTML = "";
+    d.notificaciones.forEach(n => {
+      const div = document.createElement("div");
+      div.className = "notif-item" + (n.nueva ? " nueva" : "");
+      div.innerHTML = `<div class="notif-meta">${n.fecha || ""} · Tu asesor</div>
+        <div class="notif-texto">${n.texto}</div>`;
+      nw.appendChild(div);
+    });
+    const badge = document.getElementById("badgeNotif");
+    const nuevas = d.notificaciones.filter(n => n.nueva).length;
+    if (nuevas > 0) { badge.textContent = nuevas; badge.style.display = "inline"; }
+  }
+}
+
+function fmt(n) {
+  if (!n) return "$0";
+  return "$" + Number(n).toLocaleString("es-CO");
+}
+
+/* ══════════════════════════════════════════
+   SIN PROCESO → PERFILAMIENTO
+══════════════════════════════════════════ */
+function irAPerfilamiento() {
+  perfStep = 0;
+  setFechaCargaAuto();
+  // Prellenar teléfono
+  const telInp = document.querySelector('#screenPerfilamiento input[name="telefono"]');
+  if (telInp && sesion) telInp.value = sesion.telefono || "";
+  showPerfStep(0);
+  irA("screenPerfilamiento");
+}
+
+function setFechaCargaAuto() {
+  const meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio",
+                 "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+  const h = new Date();
+  const y = h.getFullYear(), m = String(h.getMonth()+1).padStart(2,"0"), d = String(h.getDate()).padStart(2,"0");
+  const fc = document.querySelector('[name="fechaCarga"]');
+  const mc = document.querySelector('[name="mesCarga"]');
+  if (fc) fc.value = `${y}-${m}-${d}`;
+  if (mc) mc.value = `${meses[h.getMonth()]} ${y}`;
+}
+
+document.getElementById("paisPerfil").addEventListener("change", function() {
+  document.getElementById("campoProceso").style.display = this.value === "Polonia" ? "" : "none";
+});
+
+/* ── STEPS PERFILAMIENTO ── */
+function showPerfStep(idx) {
+  document.querySelectorAll(".perf-step").forEach((s,i) => s.classList.toggle("active", i === idx));
+  const row = document.getElementById("stepsRow");
+  row.innerHTML = "";
+  for (let i = 0; i < 5; i++) {
+    const dot = document.createElement("div");
+    dot.className = "step-dot" + (i < idx ? " done" : i === idx ? " active" : "");
+    dot.textContent = i < idx ? "✓" : i + 1;
+    row.appendChild(dot);
+    if (i < 4) {
+      const l = document.createElement("div");
+      l.className = "step-line" + (i < idx ? " done" : "");
+      row.appendChild(l);
+    }
+  }
+  document.getElementById("stepLabel").innerHTML =
+    `Paso <span>${idx+1} de 5</span> — ${PERF_STEPS[idx]}`;
+  document.getElementById("btnPerfPrev").style.display = idx === 0 ? "none" : "";
+  document.getElementById("btnPerfNext").textContent =
+    idx === 4 ? "Ir al pago →" : "Continuar →";
+  document.getElementById("perfScroll").scrollTop = 0;
+}
+
+function perfNext() {
+  if (!validarPerfStep(perfStep)) return;
+  if (perfStep < 4) { perfStep++; showPerfStep(perfStep); }
+  else enviarPerfilamiento();
+}
+function perfPrev() { if (perfStep > 0) { perfStep--; showPerfStep(perfStep); } }
+
+function validarPerfStep(step) {
+  const section = document.querySelector(`.perf-step[data-step="${step}"]`);
+  for (const f of section.querySelectorAll("[required]")) {
+    if (f.type === "file") {
+      if (!f.files || !f.files.length) {
+        toast("Adjunta: " + f.closest(".file-item").querySelector("label").textContent);
+        return false;
+      }
+    } else if (!f.value.trim()) {
+      f.focus(); toast("Completa todos los campos obligatorios"); return false;
+    }
+  }
+  return true;
+}
+
+/* ── ARCHIVOS PERFILAMIENTO ── */
+function triggerUpload(key) { document.getElementById("file-" + key).click(); }
+function onFileChange(key, inp) {
+  const st = document.getElementById("fs-" + key);
+  const fi = document.getElementById("fi-" + key);
+  if (inp.files && inp.files[0]) {
+    const kb = (inp.files[0].size / 1024).toFixed(0);
+    st.textContent = `✓ ${inp.files[0].name} (${kb} KB)`;
+    st.className = "file-st ok"; fi.classList.add("ok");
+  } else {
+    st.textContent = "Sin archivo"; st.className = "file-st"; fi.classList.remove("ok");
+  }
+}
+
+/* ── ENVIAR PERFILAMIENTO + GENERAR LINK BOLD ── */
+async function enviarPerfilamiento() {
+  if (!sesion?.contactId) { toast("Sesión expirada"); irA("screenLogin"); return; }
+  const fd = new FormData();
+  fd.append("contactId", sesion.contactId);
+  fd.append("divisa", document.getElementById("divisaPerfil").value || "COP");
+  document.querySelectorAll("#screenPerfilamiento input, #screenPerfilamiento select, #screenPerfilamiento textarea")
+    .forEach(f => {
+      if (!f.name) return;
+      if (f.type === "file") { if (f.files && f.files[0]) fd.append(f.name, f.files[0]); }
+      else fd.append(f.name, f.value);
+    });
+
+  showLoader("Procesando tu información...");
+  irA("screenEsperandoPago");
+  try {
+    const r = await fetchFD(WH.perfilamiento, fd);
+    hideLoader();
+    if (r.ok && r.linkPago) {
+      setTimeout(() => { window.location.href = r.linkPago; }, 800);
+    } else {
+      toast("Error generando el link de pago. Intenta de nuevo."); irA("screenPerfilamiento");
+    }
+  } catch(e) { hideLoader(); toast("Error de conexión"); irA("screenPerfilamiento"); }
+}
+
+/* ══════════════════════════════════════════
+   SUBIR DOCUMENTO FALTANTE
+══════════════════════════════════════════ */
+function subirDocFaltante(key, label) {
+  const inp = document.createElement("input");
+  inp.type = "file"; inp.accept = "application/pdf";
+  inp.onchange = async () => {
+    if (!inp.files[0]) return;
+    showLoader("Subiendo documento...");
+    const fd = new FormData();
+    fd.append("contactId", sesion.contactId);
+    fd.append("tipoDoc", key);
+    fd.append("archivo", inp.files[0]);
+    try {
+      await fetchFD(BASE + "/cliente-subir-documento", fd);
+      hideLoader(); toast("Documento subido correctamente");
+      cargarDashboard();
+    } catch(e) { hideLoader(); toast("Error al subir. Intenta de nuevo."); }
+  };
+  inp.click();
+}
+
+/* ══════════════════════════════════════════
+   ABONO
+══════════════════════════════════════════ */
+async function enviarAbono() {
+  const valor = document.getElementById("abonoValor").value;
+  const pdf   = document.getElementById("file-abonoDoc").files[0];
+  if (!valor || Number(valor) <= 0) { toast("Ingresa el valor del abono"); return; }
+  if (!pdf)   { toast("Adjunta el soporte de pago"); return; }
+  showLoader("Registrando abono...");
+  const fd = new FormData();
+  fd.append("contactId", sesion.contactId);
+  fd.append("totalPagos", "1");
+  fd.append("valorPago_1", valor);
+  fd.append("pdfPago_1", pdf);
+  fd.append("fechaSubida", new Date().toISOString().slice(0,16).replace("T"," "));
+  try {
+    await fetchFD(WH.abono, fd);
+    hideLoader(); toast("Abono registrado");
+    document.getElementById("abonoValor").value = "";
+    document.getElementById("file-abonoDoc").value = "";
+    document.getElementById("fs-abonoDoc").textContent = "Sin archivo";
+    document.getElementById("fi-abonoDoc").classList.remove("ok");
+    irA("screenDashboard"); cargarDashboard();
+  } catch(e) { hideLoader(); toast("Error al registrar abono"); }
+}
+
+/* ══════════════════════════════════════════
+   CERRAR SESIÓN
+══════════════════════════════════════════ */
+function cerrarSesion() {
+  sesion = null; sessionStorage.removeItem("gwa_sesion");
+  document.getElementById("inputTelefono").value = "";
+  document.querySelectorAll(".otp-digit").forEach(i => i.value = "");
+  irA("screenLogin");
+}
+
+/* ══════════════════════════════════════════
+   HELPERS
+══════════════════════════════════════════ */
+async function post(url, data) {
+  const r = await fetch(url, { method:"POST",
+    headers:{"Content-Type":"application/json"}, body: JSON.stringify(data) });
+  return r.json();
+}
+async function fetchFD(url, fd) {
+  const r = await fetch(url, { method:"POST", body: fd });
+  return r.json();
+}
+
+function showLoader(msg) {
+  document.getElementById("loaderMsg").textContent = msg || "Cargando...";
+  document.getElementById("loader").classList.add("show");
+}
+function hideLoader() { document.getElementById("loader").classList.remove("show"); }
+
+function toast(msg, ms = 3000) {
+  const el = document.getElementById("toast");
+  el.textContent = msg; el.classList.add("show");
+  setTimeout(() => el.classList.remove("show"), ms);
+}
+
+/* ══════════════════════════════════════════
+   INIT
+══════════════════════════════════════════ */
+if (sesion) { cargarDashboard(); }
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+}
+</script>
+</body>
+</html>
