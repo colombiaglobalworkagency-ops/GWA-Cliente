@@ -685,7 +685,7 @@
 <div class="screen" id="screenAbono">
   <header class="app-header">
     <button class="back-btn" onclick="irA('screenDashboard')">‹</button>
-    <div class="header-info"><h1>Registrar abono</h1><p>Sube tu soporte de pago</p></div>
+    <div class="header-info"><h1>Registrar abono</h1><p>Paga tu abono en línea</p></div>
   </header>
   <div class="scroll">
     <div class="campo">
@@ -693,20 +693,19 @@
       <input type="number" id="abonoValor" placeholder="Ej: 500000" min="0">
     </div>
     <div class="campo">
-      <label>Soporte de pago (PDF)</label>
-      <div class="file-item" id="fi-abonoDoc" onclick="document.getElementById('file-abonoDoc').click()">
-        <div class="file-icon-wrap">💳</div>
-        <div class="file-item-info">
-          <label>Soporte PDF</label>
-          <div class="file-st" id="fs-abonoDoc">Sin archivo</div>
-        </div>
-        <input type="file" name="pdfAbono" accept="application/pdf" class="file-hidden" id="file-abonoDoc"
-               onchange="onFileChange('abonoDoc',this)">
-      </div>
+      <label>Moneda</label>
+      <select id="abonoDivisa">
+        <option value="COP">Pesos colombianos (COP)</option>
+        <option value="USD">Dólares (USD)</option>
+        <option value="EUR">Euros (EUR)</option>
+      </select>
     </div>
+    <p style="font-size:13px;color:var(--muted);line-height:1.5;margin-top:4px;">
+      Serás redirigido a la pasarela de pago Bold. Al confirmar el pago, tu comprobante y saldo se actualizan automáticamente.
+    </p>
   </div>
   <div class="bottom-bar">
-    <button class="btn btn-primary" onclick="enviarAbono()">Guardar abono</button>
+    <button class="btn btn-primary" onclick="enviarAbono()">Ir al pago →</button>
   </div>
 </div>
 
@@ -740,7 +739,7 @@ const WH = {
   otp:      BASE + "/cliente-verificar-otp",
   dashboard:BASE + "/cliente-dashboard",
   perfilamiento: BASE + "/cliente-iniciar-perfilamiento",
-  abono:    BASE + "/registrar-abono"
+  abono:    BASE + "/cliente-iniciar-abono"
 };
 
 const ETAPAS = ["Perfilado","Documentos","En proceso","Finalizado"];
@@ -1095,26 +1094,24 @@ function subirDocFaltante(key, label) {
    ABONO
 ══════════════════════════════════════════ */
 async function enviarAbono() {
-  const valor = document.getElementById("abonoValor").value;
-  const pdf   = document.getElementById("file-abonoDoc").files[0];
+  const valor  = document.getElementById("abonoValor").value;
+  const divisa = document.getElementById("abonoDivisa").value || "COP";
   if (!valor || Number(valor) <= 0) { toast("Ingresa el valor del abono"); return; }
-  if (!pdf)   { toast("Adjunta el soporte de pago"); return; }
-  showLoader("Registrando abono...");
+  showLoader("Generando link de pago...");
   const fd = new FormData();
   fd.append("contactId", sesion.contactId);
-  fd.append("totalPagos", "1");
-  fd.append("valorPago_1", valor);
-  fd.append("pdfPago_1", pdf);
-  fd.append("fechaSubida", new Date().toISOString().slice(0,16).replace("T"," "));
+  fd.append("valor", valor);
+  fd.append("divisa", divisa);
+  irA("screenEsperandoPago");
   try {
-    await fetchFD(WH.abono, fd);
-    hideLoader(); toast("Abono registrado");
-    document.getElementById("abonoValor").value = "";
-    document.getElementById("file-abonoDoc").value = "";
-    document.getElementById("fs-abonoDoc").textContent = "Sin archivo";
-    document.getElementById("fi-abonoDoc").classList.remove("ok");
-    irA("screenDashboard"); cargarDashboard();
-  } catch(e) { hideLoader(); toast("Error al registrar abono"); }
+    const r = await fetchFD(WH.abono, fd);
+    hideLoader();
+    if (r.ok && r.linkPago) {
+      setTimeout(() => { window.location.href = r.linkPago; }, 800);
+    } else {
+      toast("Error generando el link de pago. Intenta de nuevo."); irA("screenAbono");
+    }
+  } catch(e) { hideLoader(); toast("Error de conexión. Intenta de nuevo."); irA("screenAbono"); }
 }
 
 /* ══════════════════════════════════════════
