@@ -939,8 +939,9 @@ function renderDashboard(d) {
     d.notificaciones.forEach(n => {
       const div = document.createElement("div");
       div.className = "notif-item" + (n.nueva ? " nueva" : "");
-      div.innerHTML = `<div class="notif-meta">${n.fecha || ""} · Tu asesor</div>
-        <div class="notif-texto">${n.texto}</div>`;
+      const meta = [n.fecha, n.autor || "Global Work Agency"].filter(Boolean).join(" · ");
+      div.innerHTML = `<div class="notif-meta">${meta}</div>
+        <div class="notif-texto" style="white-space:pre-line;">${n.texto}</div>`;
       nw.appendChild(div);
     });
     const badge = document.getElementById("badgeNotif");
