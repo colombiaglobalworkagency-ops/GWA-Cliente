@@ -423,9 +423,9 @@
       </div>
     </div>
 
-    <!-- ABONOS -->
+    <!-- HISTORIAL DE PAGOS -->
     <div class="card" id="cardAbonos" style="display:none;">
-      <div class="card-title">Historial de abonos</div>
+      <div class="card-title">Historial de pagos</div>
       <div id="abonosWrap"></div>
       <button class="btn btn-primary" style="margin-top:10px;" onclick="irA('screenAbono')">+ Registrar abono</button>
     </div>
@@ -620,14 +620,6 @@
           <div class="file-st" id="fs-pasaporte">Sin archivo</div>
         </div>
         <input type="file" name="pasaporte" accept="application/pdf" class="file-hidden" id="file-pasaporte" required onchange="onFileChange('pasaporte',this)">
-      </div>
-      <div class="file-item" id="fi-pago" onclick="triggerUpload('pago')">
-        <div class="file-icon-wrap">💳</div>
-        <div class="file-item-info">
-          <label>Soporte de pago del perfilamiento</label>
-          <div class="file-st" id="fs-pago">Sin archivo</div>
-        </div>
-        <input type="file" name="pago" accept="application/pdf" class="file-hidden" id="file-pago" required onchange="onFileChange('pago',this)">
       </div>
     </div>
 
@@ -898,8 +890,7 @@ function renderDashboard(d) {
     { key: "acuerdo",   label: "Acuerdo de voluntades", icon: "📄" },
     { key: "cv",        label: "Hoja de vida",           icon: "📋" },
     { key: "documento", label: "Documento de identidad", icon: "🪪" },
-    { key: "pasaporte", label: "Pasaporte",              icon: "🛂" },
-    { key: "pagoPerfil",label: "Soporte de pago",        icon: "💳" }
+    { key: "pasaporte", label: "Pasaporte",              icon: "🛂" }
   ];
   const docsWrap = document.getElementById("docsWrap");
   docsWrap.innerHTML = "";
@@ -918,19 +909,28 @@ function renderDashboard(d) {
     docsWrap.appendChild(div);
   });
 
-  // Abonos
-  if (d.abonos && d.abonos.length > 0) {
+  // Historial de pagos (perfilamiento + abonos), con descarga de comprobante
+  const historial = d.historialPagos || [];
+  if (d.proceso || historial.length > 0) {
     document.getElementById("cardAbonos").style.display = "";
     const wrap = document.getElementById("abonosWrap");
     wrap.innerHTML = "";
-    d.abonos.forEach(a => {
-      const div = document.createElement("div");
-      div.style.cssText = "padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;";
-      div.innerHTML = `<span style="font-size:13px;font-weight:600;">Abono #${a.numero}</span>
-        <span style="font-size:12px;color:var(--muted);">${a.fecha || ""}</span>
-        <a href="${a.link}" target="_blank" style="font-size:12px;color:var(--black);font-weight:700;">Ver PDF</a>`;
-      wrap.appendChild(div);
-    });
+    if (historial.length === 0) {
+      wrap.innerHTML = `<p style="color:var(--muted);font-size:13px;">Aún no tienes pagos registrados.</p>`;
+    } else {
+      historial.forEach(p => {
+        const div = document.createElement("div");
+        div.style.cssText = "padding:12px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:10px;";
+        div.innerHTML = `
+          <div style="min-width:0;">
+            <div style="font-size:13px;font-weight:600;">${p.concepto}</div>
+            <div style="font-size:12px;color:var(--muted);">${p.fecha || ""}</div>
+          </div>
+          <a href="${p.comprobante}" target="_blank" rel="noopener" download
+             style="font-size:12px;font-weight:700;color:var(--green);white-space:nowrap;">⬇ Descargar</a>`;
+        wrap.appendChild(div);
+      });
+    }
   }
 
   // Notificaciones (placeholder — se pobla si el workflow devuelve notifs)
