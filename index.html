@@ -3,57 +3,70 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#111111">
+  <meta name="theme-color" content="#ffffff">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="GWA">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap"
+        rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet"></noscript>
   <title>Global Work Agency</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --black: #111;
+      --brand: #E01B1B;
+      --brand-dark: #C01616;
+      --brand-deep: #8F1010;
+      --brand-soft: #FDE9E9;
+      --brand-grad: linear-gradient(135deg, #E01B1B 0%, #A31212 100%);
+      --black: #17181C;
       --green: #16a34a;
       --green-bg: #dcfce7;
-      --red: #dc2626;
-      --red-bg: #fee2e2;
       --amber: #d97706;
       --amber-bg: #fef3c7;
-      --border: #e5e7eb;
-      --gray: #f4f4f5;
+      --border: #ECEDF1;
+      --gray: #F4F5F7;
       --muted: #6b7280;
-      --text: #111827;
-      --r: 16px;
+      --text: #17181C;
+      --r: 18px;
+      --ease: cubic-bezier(.22,1,.36,1);
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bot: env(safe-area-inset-bottom, 0px);
     }
     html, body {
-      height: 100%; font-family: -apple-system, "Segoe UI", Montserrat, sans-serif;
-      background: #f9fafb; color: var(--text); overflow-x: hidden;
+      height: 100%; font-family: "Manrope", -apple-system, "Segoe UI", sans-serif;
+      background: #FAFAFC; color: var(--text); overflow-x: hidden;
     }
 
     /* ── PANTALLAS ── */
     .screen {
       display: none; min-height: 100dvh;
-      flex-direction: column; background: #f9fafb;
+      flex-direction: column; background: #FAFAFC;
     }
-    .screen.active { display: flex; }
+    .screen.active { display: flex; animation: screenIn .3s var(--ease); }
+    @keyframes screenIn { from { opacity: 0; transform: translateX(16px); } }
 
     /* ── HEADER ── */
     .app-header {
-      background: var(--black); color: #fff;
-      padding: calc(var(--safe-top) + 20px) 20px 20px;
+      background: #fff; color: var(--text);
+      padding: calc(var(--safe-top) + 16px) 20px 16px;
       display: flex; align-items: center; gap: 14px; flex-shrink: 0;
+      border-bottom: 1px solid var(--border);
     }
+    .header-logo { height: 24px; width: auto; object-fit: contain; margin-left: auto; }
     .back-btn {
-      width: 36px; height: 36px; background: rgba(255,255,255,.12);
-      border: none; border-radius: 50%; color: #fff; font-size: 20px;
+      width: 38px; height: 38px; background: var(--gray);
+      border: none; border-radius: 50%; color: var(--text); font-size: 20px;
       cursor: pointer; display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
+      flex-shrink: 0; transition: background .2s;
     }
-    .header-info h1 { font-size: 17px; font-weight: 700; }
-    .header-info p  { font-size: 12px; opacity: .6; margin-top: 2px; }
+    .back-btn:hover { background: var(--border); }
+    .header-info h1 { font-size: 17px; font-weight: 800; letter-spacing: -.01em; }
+    .header-info p  { font-size: 12px; color: var(--muted); margin-top: 2px; }
 
     /* ── SCROLL ── */
     .scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
@@ -61,27 +74,42 @@
 
     /* ── LOGO HERO ── */
     .hero {
-      background: var(--black);
-      padding: calc(var(--safe-top) + 48px) 20px 48px;
-      display: flex; flex-direction: column; align-items: center; gap: 16px;
+      background: #fff;
+      padding: calc(var(--safe-top) + 56px) 24px 40px;
+      display: flex; flex-direction: column; align-items: center; gap: 14px;
+      border-bottom: 1px solid var(--border);
+      position: relative; overflow: hidden;
     }
-    .hero img { height: 60px; width: auto; object-fit: contain; }
-    .hero h2  { color: #fff; font-size: 20px; font-weight: 800; text-align: center; }
-    .hero p   { color: rgba(255,255,255,.6); font-size: 14px; text-align: center; }
+    .hero::before {
+      content: ""; position: absolute; top: -130px; left: 50%;
+      transform: translateX(-50%); width: 360px; height: 280px;
+      background: radial-gradient(closest-side, rgba(224,27,27,.07), transparent);
+      pointer-events: none;
+    }
+    .hero img { height: 64px; width: auto; object-fit: contain; position: relative; }
+    .hero h2  { color: var(--text); font-size: 21px; font-weight: 800; text-align: center; letter-spacing: -.02em; }
+    .hero p   { color: var(--muted); font-size: 14px; text-align: center; }
 
     /* ── CARDS ── */
     .card {
       background: #fff; border-radius: var(--r);
       border: 1px solid var(--border); padding: 20px; margin-bottom: 14px;
+      box-shadow: 0 1px 2px rgba(16,24,40,.04);
+      animation: cardIn .55s var(--ease) both;
     }
+    @keyframes cardIn { from { opacity: 0; transform: translateY(14px); } }
+    .scroll > .card:nth-child(2) { animation-delay: .06s; }
+    .scroll > .card:nth-child(3) { animation-delay: .12s; }
+    .scroll > .card:nth-child(4) { animation-delay: .18s; }
+    .scroll > .card:nth-child(5) { animation-delay: .24s; }
     .card-title {
-      font-size: 11px; font-weight: 700; color: var(--muted);
+      font-size: 11px; font-weight: 800; color: var(--muted);
       text-transform: uppercase; letter-spacing: .6px; margin-bottom: 14px;
     }
 
     /* ── INPUTS ── */
     .campo { margin-bottom: 16px; }
-    .campo label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+    .campo label { display: block; font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
     .campo input, .campo select, .campo textarea {
       width: 100%; padding: 14px 16px;
       border: 1.5px solid var(--border); border-radius: 12px;
@@ -90,7 +118,7 @@
       transition: border-color .2s, box-shadow .2s;
     }
     .campo input:focus, .campo select:focus, .campo textarea:focus {
-      border-color: var(--black); box-shadow: 0 0 0 3px rgba(0,0,0,.06);
+      border-color: var(--brand); box-shadow: 0 0 0 3px rgba(224,27,27,.09);
     }
     .campo textarea { min-height: 80px; resize: vertical; line-height: 1.5; }
     .campo select {
@@ -105,14 +133,22 @@
     /* ── BOTONES ── */
     .btn {
       width: 100%; padding: 16px; border-radius: 50px; border: none;
-      font-size: 15px; font-weight: 700; cursor: pointer;
-      transition: opacity .2s, transform .1s; font-family: inherit;
+      font-size: 15px; font-weight: 800; cursor: pointer;
+      transition: opacity .2s, transform .1s, filter .2s, box-shadow .2s; font-family: inherit;
     }
-    .btn:active { transform: scale(.97); opacity: .85; }
-    .btn-primary  { background: var(--black); color: #fff; }
-    .btn-secondary { background: var(--gray); color: var(--black); }
+    .btn:active { transform: scale(.97); opacity: .9; }
+    .btn-primary {
+      background: var(--brand-grad); color: #fff;
+      box-shadow: 0 6px 18px rgba(224,27,27,.28);
+    }
+    .btn-primary:hover { filter: brightness(.95); }
+    .btn-secondary { background: var(--gray); color: var(--text); }
+    .btn-secondary:hover { background: var(--border); }
     .btn-green    { background: var(--green); color: #fff; }
     .btn:disabled { opacity: .4; pointer-events: none; }
+    .btn:focus-visible, .back-btn:focus-visible, .float-btn:focus-visible {
+      outline: 2px solid var(--brand); outline-offset: 2px;
+    }
 
     /* ── BOTTOM BAR ── */
     .bottom-bar {
@@ -127,11 +163,11 @@
     .otp-grid { display: flex; gap: 10px; justify-content: center; margin: 24px 0; }
     .otp-digit {
       width: 48px; height: 58px; border: 2px solid var(--border);
-      border-radius: 12px; font-size: 24px; font-weight: 700;
+      border-radius: 12px; font-size: 24px; font-weight: 800;
       text-align: center; font-family: inherit; color: var(--text);
-      background: #fff; outline: none; transition: border-color .2s;
+      background: #fff; outline: none; transition: border-color .2s, box-shadow .2s;
     }
-    .otp-digit:focus { border-color: var(--black); }
+    .otp-digit:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(224,27,27,.09); }
 
     /* ── BARRA DE PROGRESO ── */
     .progress-track {
@@ -139,7 +175,7 @@
     }
     .progress-fill {
       height: 100%; border-radius: 99px;
-      transition: width .6s ease; background: var(--black);
+      transition: width .9s var(--ease); background: var(--brand);
     }
     .progress-fill.green { background: var(--green); }
 
@@ -149,43 +185,63 @@
       width: 28px; height: 28px; border-radius: 50%;
       border: 2.5px solid var(--border); background: #fff;
       display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 700; color: var(--muted);
+      font-size: 11px; font-weight: 800; color: var(--muted);
       flex-shrink: 0; transition: all .3s;
     }
-    .etapa-dot.done { background: var(--black); border-color: var(--black); color: #fff; }
-    .etapa-dot.active { border-color: var(--black); color: var(--black); box-shadow: 0 0 0 3px rgba(0,0,0,.1); }
+    .etapa-dot.done { background: var(--brand-grad); border-color: var(--brand); color: #fff; }
+    .etapa-dot.active { border-color: var(--brand); color: var(--brand); box-shadow: 0 0 0 3px rgba(224,27,27,.12); }
     .etapa-linea { flex: 1; height: 2.5px; background: var(--border); transition: background .3s; }
-    .etapa-linea.done { background: var(--black); }
+    .etapa-linea.done { background: var(--brand); }
     .etapas-labels { display: flex; justify-content: space-between; }
-    .etapa-label { font-size: 10px; color: var(--muted); font-weight: 600; text-align: center; flex: 1; }
-    .etapa-label.active { color: var(--black); }
+    .etapa-label { font-size: 10px; color: var(--muted); font-weight: 700; text-align: center; flex: 1; }
+    .etapa-label.active { color: var(--brand); }
 
     /* ── DOCUMENTOS ── */
     .doc-item {
       display: flex; align-items: center; gap: 12px;
       padding: 14px; border-radius: 12px;
       border: 1.5px solid var(--border); margin-bottom: 10px;
-      background: #fff; cursor: pointer; transition: border-color .2s;
+      background: #fff; transition: border-color .2s;
     }
-    .doc-item.ok    { border-color: var(--green); background: #f0fdf4; cursor: default; }
+    .doc-item.ok    { border-color: var(--green); background: #f0fdf4; }
     .doc-item.missing { border-color: var(--amber); background: #fffbeb; }
     .doc-icon {
       width: 40px; height: 40px; border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 20px; flex-shrink: 0; background: var(--gray);
+      flex-shrink: 0; background: var(--gray); color: var(--muted);
     }
-    .doc-item.ok    .doc-icon { background: var(--green-bg); }
-    .doc-item.missing .doc-icon { background: var(--amber-bg); }
-    .doc-info label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 3px; }
+    .doc-icon svg { width: 20px; height: 20px; }
+    .doc-item.ok    .doc-icon { background: var(--green-bg); color: var(--green); }
+    .doc-item.missing .doc-icon { background: var(--amber-bg); color: var(--amber); }
+    .doc-info label { font-size: 13px; font-weight: 700; display: block; margin-bottom: 3px; }
     .doc-status { font-size: 12px; color: var(--muted); }
-    .doc-status.ok      { color: var(--green); font-weight: 600; }
-    .doc-status.missing { color: var(--amber); font-weight: 600; }
+    .doc-status.ok      { color: var(--green); font-weight: 700; }
+    .doc-status.missing { color: var(--amber); font-weight: 700; }
     .doc-upload-btn {
-      margin-left: auto; font-size: 12px; font-weight: 700;
-      padding: 6px 12px; border-radius: 20px; border: none;
-      background: var(--amber); color: #fff; cursor: pointer; flex-shrink: 0;
+      margin-left: auto; font-size: 12px; font-weight: 800;
+      padding: 8px 14px; border-radius: 20px; border: none;
+      background: var(--brand-grad); color: #fff; cursor: pointer; flex-shrink: 0;
+      box-shadow: 0 3px 10px rgba(224,27,27,.25);
     }
     .file-hidden { display: none; }
+
+    /* ── HISTORIAL DE PAGOS ── */
+    .pago-row {
+      padding: 12px 0; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 12px;
+    }
+    .pago-row-icon {
+      width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+      background: var(--brand-soft); color: var(--brand);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .pago-row-icon svg { width: 18px; height: 18px; }
+    .pago-dl {
+      margin-left: auto; display: inline-flex; align-items: center; gap: 5px;
+      font-size: 12px; font-weight: 800; color: var(--brand);
+      text-decoration: none; white-space: nowrap; cursor: pointer;
+    }
+    .pago-dl svg { width: 14px; height: 14px; }
 
     /* ── NOTIFICACIONES ── */
     .notif-item {
@@ -193,7 +249,7 @@
       border: 1px solid var(--border); margin-bottom: 10px;
       background: #fff;
     }
-    .notif-item.nueva { border-left: 3px solid var(--black); }
+    .notif-item.nueva { border-left: 3px solid var(--brand); background: #FFFBFB; }
     .notif-meta { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
     .notif-texto { font-size: 14px; line-height: 1.5; }
 
@@ -205,27 +261,29 @@
     .float-btn {
       width: 52px; height: 52px; border-radius: 50%; border: none;
       display: flex; align-items: center; justify-content: center;
-      font-size: 22px; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,.2);
-      text-decoration: none;
+      cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,.2);
+      text-decoration: none; color: #fff; transition: transform .2s var(--ease);
     }
+    .float-btn:hover { transform: translateY(-2px); }
     .float-btn.wa    { background: #25D366; }
-    .float-btn.ayuda { background: var(--black); color: #fff; }
+    .float-btn.ayuda { background: var(--black); }
 
     /* ── STEPS ── */
-    .steps-wrap { background: var(--black); padding: 0 20px 16px; flex-shrink: 0; }
+    .steps-wrap { background: #fff; padding: 0 20px 16px; flex-shrink: 0; border-bottom: 1px solid var(--border); }
     .steps-row  { display: flex; align-items: center; }
     .step-dot {
       width: 26px; height: 26px; border-radius: 50%;
-      border: 2px solid rgba(255,255,255,.3);
-      color: rgba(255,255,255,.4); font-size: 11px; font-weight: 700;
+      border: 2px solid var(--border); background: #fff;
+      color: var(--muted); font-size: 11px; font-weight: 800;
       display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      transition: all .3s;
     }
-    .step-dot.done   { background: #fff; border-color: #fff; color: var(--black); }
-    .step-dot.active { border-color: #fff; color: #fff; box-shadow: 0 0 0 3px rgba(255,255,255,.2); }
-    .step-line { flex: 1; height: 2px; background: rgba(255,255,255,.2); }
-    .step-line.done { background: #fff; }
-    .step-label { color: rgba(255,255,255,.6); font-size: 11px; margin-top: 8px; }
-    .step-label span { color: #fff; font-weight: 700; }
+    .step-dot.done   { background: var(--brand-grad); border-color: var(--brand); color: #fff; }
+    .step-dot.active { border-color: var(--brand); color: var(--brand); box-shadow: 0 0 0 3px rgba(224,27,27,.12); }
+    .step-line { flex: 1; height: 2px; background: var(--border); transition: background .3s; }
+    .step-line.done { background: var(--brand); }
+    .step-label { color: var(--muted); font-size: 11px; margin-top: 8px; }
+    .step-label span { color: var(--brand); font-weight: 800; }
 
     /* ── ARCHIVOS FORMULARIO ── */
     .file-item {
@@ -234,16 +292,18 @@
       border: 1.5px solid var(--border); border-radius: 12px;
       margin-bottom: 10px; cursor: pointer; transition: border-color .2s;
     }
+    .file-item:hover { border-color: #d3d5db; }
     .file-item.ok { border-color: var(--green); }
     .file-icon-wrap {
-      width: 40px; height: 40px; background: var(--gray);
+      width: 40px; height: 40px; background: var(--gray); color: var(--muted);
       border-radius: 10px; display: flex; align-items: center;
-      justify-content: center; font-size: 20px; flex-shrink: 0;
+      justify-content: center; flex-shrink: 0;
     }
-    .file-item.ok .file-icon-wrap { background: var(--green-bg); }
-    .file-item-info label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 3px; }
+    .file-icon-wrap svg { width: 20px; height: 20px; }
+    .file-item.ok .file-icon-wrap { background: var(--green-bg); color: var(--green); }
+    .file-item-info label { font-size: 13px; font-weight: 700; display: block; margin-bottom: 3px; cursor: pointer; }
     .file-st { font-size: 12px; color: var(--muted); }
-    .file-st.ok { color: var(--green); font-weight: 600; }
+    .file-st.ok { color: var(--green); font-weight: 700; }
 
     /* ── PRECIO ROW ── */
     .precio-row { display: flex; gap: 10px; }
@@ -252,16 +312,17 @@
 
     /* ── AVATAR ── */
     .avatar {
-      width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,.18);
+      width: 42px; height: 42px; border-radius: 50%; background: var(--brand-grad);
       color: #fff; font-size: 17px; font-weight: 800;
       display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      box-shadow: 0 3px 10px rgba(224,27,27,.25);
     }
 
     /* ── PAGO INFO ── */
     .pago-nums { display: flex; gap: 0; margin: 14px 0 10px; }
     .pago-num { flex: 1; text-align: center; }
-    .pago-num .valor { font-size: 18px; font-weight: 800; color: var(--black); }
-    .pago-num .lbl   { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .pago-num .valor { font-size: 18px; font-weight: 800; color: var(--black); font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+    .pago-num .lbl   { font-size: 11px; color: var(--muted); margin-top: 2px; font-weight: 600; }
     .pago-num + .pago-num { border-left: 1px solid var(--border); }
 
     /* ── SIN PROCESO ── */
@@ -270,17 +331,31 @@
       align-items: center; justify-content: center;
       padding: 40px 30px; text-align: center; gap: 16px;
     }
-    .empty-icon { font-size: 56px; }
-    .empty-state h2 { font-size: 22px; font-weight: 800; }
+    .empty-icon {
+      width: 88px; height: 88px; border-radius: 50%;
+      background: var(--brand-soft); color: var(--brand);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .empty-icon svg { width: 44px; height: 44px; }
+    .empty-state h2 { font-size: 22px; font-weight: 800; letter-spacing: -.02em; }
     .empty-state p  { font-size: 14px; color: var(--muted); line-height: 1.6; max-width: 280px; }
+
+    /* ── SKELETON ── */
+    .sk {
+      border-radius: 8px;
+      background: linear-gradient(100deg, #ECEDF1 40%, #F7F8FA 50%, #ECEDF1 60%);
+      background-size: 200% 100%;
+      animation: shimmer 1.3s linear infinite;
+    }
+    @keyframes shimmer { to { background-position: -200% 0; } }
 
     /* ── TOAST ── */
     #toast {
       position: fixed; bottom: 110px; left: 50%;
       transform: translateX(-50%) translateY(16px);
-      background: #222; color: #fff;
+      background: var(--black); color: #fff;
       padding: 11px 22px; border-radius: 50px;
-      font-size: 14px; font-weight: 600;
+      font-size: 14px; font-weight: 700;
       opacity: 0; pointer-events: none;
       transition: all .3s; white-space: nowrap; z-index: 9999;
     }
@@ -295,24 +370,42 @@
     #loader.show { display: flex; }
     .spinner {
       width: 46px; height: 46px;
-      border: 4px solid var(--border); border-top-color: var(--black);
+      border: 4px solid var(--border); border-top-color: var(--brand);
       border-radius: 50%; animation: spin .8s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-    #loader p { font-size: 15px; font-weight: 600; color: var(--text); }
+    #loader p { font-size: 15px; font-weight: 700; color: var(--text); }
 
-    /* ── PAGO EXITOSO ── */
+    /* ── PAGO / ESPERA ── */
     .success-wrap {
       flex: 1; display: flex; flex-direction: column;
       align-items: center; justify-content: center; padding: 40px 30px; text-align: center;
     }
     .success-icon-big {
       width: 80px; height: 80px; background: var(--green); border-radius: 50%;
-      color: #fff; font-size: 36px;
+      color: #fff;
       display: flex; align-items: center; justify-content: center; margin-bottom: 24px;
-      animation: popIn .4s cubic-bezier(.175,.885,.32,1.275) forwards;
+      animation: popIn .45s var(--ease) forwards;
     }
-    @keyframes popIn { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+    .success-icon-big svg { width: 36px; height: 36px; }
+    @keyframes popIn { from{transform:scale(.4);opacity:0} to{transform:scale(1);opacity:1} }
+    .pay-wait-icon {
+      width: 84px; height: 84px; border-radius: 50%;
+      background: var(--brand-soft); color: var(--brand);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 22px;
+      animation: pulseSoft 1.6s var(--ease) infinite;
+    }
+    .pay-wait-icon svg { width: 38px; height: 38px; }
+    @keyframes pulseSoft { 0%,100% { transform: scale(1); } 50% { transform: scale(1.07); } }
+
+    /* ── REDUCED MOTION ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .001s !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001s !important;
+      }
+    }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 480px) {
@@ -328,13 +421,13 @@
 ══════════════════════════════════════════ -->
 <div class="screen active" id="screenLogin">
   <div class="hero">
-    <img src="logo.svg" alt="Global Work Agency">
+    <img src="logo-color.png" alt="Global Work Agency">
     <h2>Mi proceso GWA</h2>
     <p>Consulta el estado de tu proceso de movilidad laboral</p>
   </div>
   <div class="scroll" style="padding-top:32px;">
     <div class="campo">
-      <label>Número de celular</label>
+      <label for="inputTelefono">Número de celular</label>
       <input type="tel" id="inputTelefono" placeholder="+57 300 000 0000"
              autocomplete="tel" inputmode="tel">
     </div>
@@ -350,24 +443,59 @@
 ══════════════════════════════════════════ -->
 <div class="screen" id="screenOtp">
   <div class="hero">
-    <img src="logo.svg" alt="Global Work Agency">
+    <img src="logo-color.png" alt="Global Work Agency">
     <h2>Código de verificación</h2>
     <p id="otpSubtitulo">Ingresa el código que enviamos a tu celular</p>
   </div>
   <div class="scroll" style="padding-top:32px; text-align:center;">
     <div class="otp-grid" id="otpGrid">
-      <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]">
-      <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]">
-      <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]">
-      <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]">
-      <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]">
-      <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Dígito 1">
+      <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Dígito 2">
+      <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Dígito 3">
+      <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Dígito 4">
+      <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Dígito 5">
+      <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Dígito 6">
     </div>
     <button class="btn btn-primary" onclick="verificarOTP()" style="margin-bottom:16px;">Verificar →</button>
     <button class="btn btn-secondary" onclick="reenviarOTP()" id="btnReenviar">Reenviar código</button>
     <p style="margin-top:16px;font-size:13px;color:var(--muted);">
       <span style="cursor:pointer;text-decoration:underline;" onclick="irA('screenLogin')">← Cambiar número</span>
     </p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PANTALLA — SKELETON (cargando dashboard)
+══════════════════════════════════════════ -->
+<div class="screen" id="screenSkeleton" aria-hidden="true">
+  <header class="app-header">
+    <div class="sk" style="width:42px;height:42px;border-radius:50%;"></div>
+    <div style="flex:1;">
+      <div class="sk" style="width:150px;height:14px;margin-bottom:8px;"></div>
+      <div class="sk" style="width:96px;height:10px;"></div>
+    </div>
+  </header>
+  <div class="scroll">
+    <div class="card">
+      <div class="sk" style="width:130px;height:10px;margin-bottom:18px;"></div>
+      <div class="sk" style="width:100%;height:28px;margin-bottom:12px;"></div>
+      <div class="sk" style="width:55%;height:10px;"></div>
+    </div>
+    <div class="card">
+      <div class="sk" style="width:110px;height:10px;margin-bottom:18px;"></div>
+      <div style="display:flex;gap:12px;margin-bottom:14px;">
+        <div class="sk" style="flex:1;height:34px;"></div>
+        <div class="sk" style="flex:1;height:34px;"></div>
+        <div class="sk" style="flex:1;height:34px;"></div>
+      </div>
+      <div class="sk" style="width:100%;height:10px;border-radius:99px;"></div>
+    </div>
+    <div class="card">
+      <div class="sk" style="width:120px;height:10px;margin-bottom:18px;"></div>
+      <div class="sk" style="width:100%;height:52px;margin-bottom:10px;border-radius:12px;"></div>
+      <div class="sk" style="width:100%;height:52px;margin-bottom:10px;border-radius:12px;"></div>
+      <div class="sk" style="width:100%;height:52px;border-radius:12px;"></div>
+    </div>
   </div>
 </div>
 
@@ -381,7 +509,10 @@
       <h1 id="dashNombre">Mi proceso</h1>
       <p id="dashAsesor">Global Work Agency</p>
     </div>
-    <button class="back-btn" style="margin-left:auto;" onclick="cerrarSesion()" title="Cerrar sesión">⎋</button>
+    <img src="logo-color.png" alt="" class="header-logo">
+    <button class="back-btn" onclick="cerrarSesion()" title="Cerrar sesión" aria-label="Cerrar sesión">
+      <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    </button>
   </header>
 
   <div class="scroll">
@@ -427,12 +558,12 @@
     <div class="card" id="cardAbonos" style="display:none;">
       <div class="card-title">Historial de pagos</div>
       <div id="abonosWrap"></div>
-      <button class="btn btn-primary" style="margin-top:10px;" onclick="irA('screenAbono')">+ Registrar abono</button>
+      <button class="btn btn-primary" style="margin-top:14px;" onclick="irA('screenAbono')">+ Registrar abono</button>
     </div>
 
     <!-- NOTIFICACIONES -->
     <div class="card">
-      <div class="card-title">Notificaciones <span id="badgeNotif" style="background:var(--black);color:#fff;border-radius:99px;padding:1px 8px;font-size:11px;display:none;"></span></div>
+      <div class="card-title">Notificaciones <span id="badgeNotif" style="background:var(--brand);color:#fff;border-radius:99px;padding:1px 8px;font-size:11px;display:none;"></span></div>
       <div id="notifsWrap">
         <p style="color:var(--muted);font-size:13px;">Sin notificaciones por ahora.</p>
       </div>
@@ -442,8 +573,12 @@
 
   <!-- BOTONES FLOTANTES -->
   <div class="float-btns">
-    <a class="float-btn wa" id="btnWA" href="https://wa.me/17867788242" target="_blank" title="WhatsApp asesor">💬</a>
-    <button class="float-btn ayuda" onclick="toast('¿Necesitas ayuda? Escribe a tu asesor por WhatsApp.')">❓</button>
+    <a class="float-btn wa" id="btnWA" href="https://wa.me/17867788242" target="_blank" title="WhatsApp asesor" aria-label="Hablar por WhatsApp">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </a>
+    <button class="float-btn ayuda" onclick="toast('¿Necesitas ayuda? Escribe a tu asesor por WhatsApp.')" aria-label="Ayuda">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </button>
   </div>
 </div>
 
@@ -457,19 +592,25 @@
       <h1 id="spNombre">Mi proceso</h1>
       <p>Global Work Agency</p>
     </div>
-    <button class="back-btn" style="margin-left:auto;" onclick="cerrarSesion()" title="Cerrar sesión">⎋</button>
+    <img src="logo-color.png" alt="" class="header-logo">
+    <button class="back-btn" onclick="cerrarSesion()" title="Cerrar sesión" aria-label="Cerrar sesión">
+      <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    </button>
   </header>
 
   <div class="empty-state">
-    <div class="empty-icon">🌍</div>
+    <div class="empty-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    </div>
     <h2>¡Bienvenido a GWA!</h2>
     <p>Aún no tienes un proceso activo. Inicia tu perfilamiento y comienza tu camino hacia Europa.</p>
     <button class="btn btn-primary" style="max-width:300px;" onclick="irAPerfilamiento()">
       Iniciar mi proceso →
     </button>
     <a class="float-btn wa" href="https://wa.me/17867788242" target="_blank"
-       style="margin-top:10px;width:auto;border-radius:30px;padding:12px 20px;font-size:14px;font-weight:700;gap:8px;display:flex;align-items:center;">
-      💬 Hablar con un asesor
+       style="margin-top:10px;width:auto;border-radius:30px;padding:12px 20px;font-size:14px;font-weight:800;gap:8px;display:flex;align-items:center;">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Hablar con un asesor
     </a>
   </div>
 </div>
@@ -479,8 +620,10 @@
 ══════════════════════════════════════════ -->
 <div class="screen" id="screenPerfilamiento">
 
-  <header class="app-header">
-    <button class="back-btn" onclick="irA('screenSinProceso')">‹</button>
+  <header class="app-header" style="border-bottom:none;">
+    <button class="back-btn" onclick="irA('screenSinProceso')" aria-label="Volver">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
     <div class="header-info">
       <h1>Perfilamiento</h1>
       <p>Completa los 5 pasos</p>
@@ -507,7 +650,7 @@
         </div>
       </div>
       <div class="campo">
-        <label>País destino <span style="color:#e53e3e">*</span></label>
+        <label>País destino <span style="color:var(--brand)">*</span></label>
         <select name="pais" id="paisPerfil" required>
           <option value="">Seleccionar</option>
           <option>Croacia</option><option>Polonia</option><option>Hungría</option>
@@ -525,7 +668,7 @@
         </select>
       </div>
       <div class="campo">
-        <label>Divisa de pago <span style="color:#e53e3e">*</span></label>
+        <label>Divisa de pago <span style="color:var(--brand)">*</span></label>
         <select name="divisa" id="divisaPerfil" required>
           <option value="COP">$ COP — $90.000</option>
           <option value="USD">$ USD — $32</option>
@@ -536,23 +679,23 @@
 
     <!-- PASO 2 -->
     <div class="perf-step" data-step="1">
-      <div class="campo"><label>Nombre completo <span style="color:#e53e3e">*</span></label>
+      <div class="campo"><label>Nombre completo <span style="color:var(--brand)">*</span></label>
         <input type="text" name="name" placeholder="Tu nombre y apellidos" required></div>
-      <div class="campo"><label>Ciudad de residencia <span style="color:#e53e3e">*</span></label>
+      <div class="campo"><label>Ciudad de residencia <span style="color:var(--brand)">*</span></label>
         <input type="text" name="ciudadResidencia" placeholder="Ciudad" required></div>
       <div class="form-grid">
-        <div class="campo"><label>Fecha de nacimiento <span style="color:#e53e3e">*</span></label>
+        <div class="campo"><label>Fecha de nacimiento <span style="color:var(--brand)">*</span></label>
           <input type="date" name="fechaNacimiento" required></div>
-        <div class="campo"><label>Edad <span style="color:#e53e3e">*</span></label>
+        <div class="campo"><label>Edad <span style="color:var(--brand)">*</span></label>
           <input type="number" name="edad" min="18" max="80" placeholder="18" required></div>
       </div>
       <div class="form-grid">
-        <div class="campo"><label>Sexo <span style="color:#e53e3e">*</span></label>
+        <div class="campo"><label>Sexo <span style="color:var(--brand)">*</span></label>
           <select name="sexo" required>
             <option value="">Selecciona</option>
             <option>Masculino</option><option>Femenino</option><option>Otro</option>
           </select></div>
-        <div class="campo"><label>Nacionalidad <span style="color:#e53e3e">*</span></label>
+        <div class="campo"><label>Nacionalidad <span style="color:var(--brand)">*</span></label>
           <select name="nacionalidad" required>
             <option value="">Selecciona</option>
             <option>Colombiana</option><option>Venezolana</option><option>Ecuatoriana</option>
@@ -565,22 +708,22 @@
           </select></div>
       </div>
       <div class="form-grid">
-        <div class="campo"><label>Tipo de documento <span style="color:#e53e3e">*</span></label>
+        <div class="campo"><label>Tipo de documento <span style="color:var(--brand)">*</span></label>
           <select name="tipoDocumento" required>
             <option value="">Tipo</option>
             <option>Cédula de ciudadanía</option><option>Tarjeta de identidad</option>
             <option>Cédula de extranjería</option><option>Pasaporte</option>
           </select></div>
-        <div class="campo"><label>Número <span style="color:#e53e3e">*</span></label>
+        <div class="campo"><label>Número <span style="color:var(--brand)">*</span></label>
           <input type="text" name="documento" placeholder="Número" required></div>
       </div>
-      <div class="campo"><label>Celular <span style="color:#e53e3e">*</span></label>
+      <div class="campo"><label>Celular <span style="color:var(--brand)">*</span></label>
         <input type="tel" name="telefono" id="perfTelefono" placeholder="+57 300 000 0000" required></div>
       <div class="campo"><label>Correo electrónico</label>
         <input type="email" name="email" placeholder="correo@ejemplo.com"></div>
-      <div class="campo"><label>Dirección <span style="color:#e53e3e">*</span></label>
+      <div class="campo"><label>Dirección <span style="color:var(--brand)">*</span></label>
         <input type="text" name="direccion" placeholder="Dirección completa" required></div>
-      <div class="campo"><label>Profesión <span style="color:#e53e3e">*</span></label>
+      <div class="campo"><label>Profesión <span style="color:var(--brand)">*</span></label>
         <input type="text" name="profesion" placeholder="Profesión u oficio" required></div>
     </div>
 
@@ -590,7 +733,7 @@
         Sube cada documento en formato PDF. Todos son obligatorios para continuar.
       </p>
       <div class="file-item" id="fi-acuerdo" onclick="triggerUpload('acuerdo')">
-        <div class="file-icon-wrap">📄</div>
+        <div class="file-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
         <div class="file-item-info">
           <label>Acuerdo de voluntades</label>
           <div class="file-st" id="fs-acuerdo">Sin archivo</div>
@@ -598,7 +741,7 @@
         <input type="file" name="acuerdo" accept="application/pdf" class="file-hidden" id="file-acuerdo" required onchange="onFileChange('acuerdo',this)">
       </div>
       <div class="file-item" id="fi-cv" onclick="triggerUpload('cv')">
-        <div class="file-icon-wrap">📋</div>
+        <div class="file-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></div>
         <div class="file-item-info">
           <label>Hoja de vida</label>
           <div class="file-st" id="fs-cv">Sin archivo</div>
@@ -606,7 +749,7 @@
         <input type="file" name="cv" accept="application/pdf" class="file-hidden" id="file-cv" required onchange="onFileChange('cv',this)">
       </div>
       <div class="file-item" id="fi-doc" onclick="triggerUpload('doc')">
-        <div class="file-icon-wrap">🪪</div>
+        <div class="file-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="11" r="2"/><path d="M5 17c.5-1.5 1.5-2.3 3-2.3s2.5.8 3 2.3"/><path d="M14 10h6"/><path d="M14 14h4"/></svg></div>
         <div class="file-item-info">
           <label>Documento de identidad</label>
           <div class="file-st" id="fs-doc">Sin archivo</div>
@@ -614,7 +757,7 @@
         <input type="file" name="doc" accept="application/pdf" class="file-hidden" id="file-doc" required onchange="onFileChange('doc',this)">
       </div>
       <div class="file-item" id="fi-pasaporte" onclick="triggerUpload('pasaporte')">
-        <div class="file-icon-wrap">🛂</div>
+        <div class="file-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
         <div class="file-item-info">
           <label>Pasaporte</label>
           <div class="file-st" id="fs-pasaporte">Sin archivo</div>
@@ -684,16 +827,18 @@
 ══════════════════════════════════════════ -->
 <div class="screen" id="screenAbono">
   <header class="app-header">
-    <button class="back-btn" onclick="irA('screenDashboard')">‹</button>
+    <button class="back-btn" onclick="irA('screenDashboard')" aria-label="Volver">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
     <div class="header-info"><h1>Registrar abono</h1><p>Paga tu abono en línea</p></div>
   </header>
   <div class="scroll">
     <div class="campo">
-      <label>Valor del abono</label>
+      <label for="abonoValor">Valor del abono</label>
       <input type="number" id="abonoValor" placeholder="Ej: 500000" min="0">
     </div>
     <div class="campo">
-      <label>Moneda</label>
+      <label for="abonoDivisa">Moneda</label>
       <select id="abonoDivisa">
         <option value="COP">Pesos colombianos (COP)</option>
         <option value="USD">Dólares (USD)</option>
@@ -714,7 +859,9 @@
 ══════════════════════════════════════════ -->
 <div class="screen" id="screenEsperandoPago">
   <div class="success-wrap">
-    <div style="font-size:56px;margin-bottom:20px;">⏳</div>
+    <div class="pay-wait-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+    </div>
     <h2 style="font-size:22px;font-weight:800;margin-bottom:10px;">Redirigiendo al pago</h2>
     <p style="color:var(--muted);font-size:14px;line-height:1.6;max-width:280px;margin-bottom:28px;">
       Serás redirigido a la pasarela de pago Bold para completar tu proceso.
@@ -726,7 +873,7 @@
 <!-- ══════════════════════════════════════════
      TOAST / LOADER
 ══════════════════════════════════════════ -->
-<div id="toast"></div>
+<div id="toast" role="status"></div>
 <div id="loader"><div class="spinner"></div><p id="loaderMsg">Cargando...</p></div>
 
 <script>
@@ -746,6 +893,16 @@ const ETAPAS = ["Perfilado","Documentos","En proceso","Finalizado"];
 const PERF_STEPS = ["Datos básicos","Datos personales","Documentos","Pasaporte","Familia"];
 let perfStep = 0;
 
+/* ── ICONOS SVG (Lucide) ── */
+const ICONS = {
+  fileText: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
+  clipboard: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>',
+  idCard: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="11" r="2"/><path d="M5 17c.5-1.5 1.5-2.3 3-2.3s2.5.8 3 2.3"/><path d="M14 10h6"/><path d="M14 14h4"/></svg>',
+  globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+  card: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>',
+  download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>'
+};
+
 /* ══════════════════════════════════════════
    SESIÓN
 ══════════════════════════════════════════ */
@@ -759,6 +916,22 @@ function irA(id) {
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
   window.scrollTo(0, 0);
+}
+
+/* ══════════════════════════════════════════
+   ANIMACIÓN: CONTADOR DE NÚMEROS
+══════════════════════════════════════════ */
+const REDUCE_MOTION = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function countUp(el, target, formatter, dur = 900) {
+  target = Number(target) || 0;
+  if (REDUCE_MOTION || target <= 0) { el.textContent = formatter(target); return; }
+  const t0 = performance.now();
+  (function tick(now) {
+    const p = Math.min((now - t0) / dur, 1);
+    const e = 1 - Math.pow(1 - p, 4); // ease-out-quart
+    el.textContent = formatter(Math.round(target * e));
+    if (p < 1) requestAnimationFrame(tick);
+  })(t0);
 }
 
 /* ══════════════════════════════════════════
@@ -832,11 +1005,10 @@ async function reenviarOTP() {
 ══════════════════════════════════════════ */
 async function cargarDashboard() {
   if (!sesion) { irA("screenLogin"); return; }
-  showLoader("Cargando tu proceso...");
+  irA("screenSkeleton");
   try {
     const r = await post(WH.dashboard, { contactId: sesion.contactId });
-    hideLoader();
-    if (!r.ok) { toast("Error cargando datos"); return; }
+    if (!r.ok) { toast("Error cargando datos"); irA("screenLogin"); return; }
     if (!r.tieneProceso) {
       // Sin proceso activo
       const ini = (sesion.nombre || "?")[0].toUpperCase();
@@ -846,7 +1018,7 @@ async function cargarDashboard() {
     }
     renderDashboard(r);
     irA("screenDashboard");
-  } catch(e) { hideLoader(); toast("Error de conexión"); }
+  } catch(e) { toast("Error de conexión"); irA("screenLogin"); }
 }
 
 function renderDashboard(d) {
@@ -876,20 +1048,26 @@ function renderDashboard(d) {
   document.getElementById("etapaTexto").textContent =
     d.proceso ? `Etapa actual: ${d.proceso.etapaLabel}` : "Sin etapa asignada aún";
 
-  // Pago
+  // Pago (números animados)
   const { total, pagado, restante, porcentaje } = d.pago || {};
-  document.getElementById("pagadoVal").textContent   = fmt(pagado);
-  document.getElementById("restanteVal").textContent = fmt(restante);
-  document.getElementById("totalVal").textContent    = fmt(total);
-  document.getElementById("pagoBar").style.width     = (porcentaje || 0) + "%";
-  document.getElementById("pagoPct").textContent     = (porcentaje || 0) + "% pagado";
+  countUp(document.getElementById("pagadoVal"),   pagado,   fmt);
+  countUp(document.getElementById("restanteVal"), restante, fmt);
+  countUp(document.getElementById("totalVal"),    total,    fmt);
+  countUp(document.getElementById("pagoPct"), porcentaje || 0, v => v + "% pagado", 900);
+  const bar = document.getElementById("pagoBar");
+  if (REDUCE_MOTION) {
+    bar.style.width = (porcentaje || 0) + "%";
+  } else {
+    bar.style.width = "0%";
+    setTimeout(() => { bar.style.width = (porcentaje || 0) + "%"; }, 60);
+  }
 
   // Documentos
   const DOCS = [
-    { key: "acuerdo",   label: "Acuerdo de voluntades", icon: "📄" },
-    { key: "cv",        label: "Hoja de vida",           icon: "📋" },
-    { key: "documento", label: "Documento de identidad", icon: "🪪" },
-    { key: "pasaporte", label: "Pasaporte",              icon: "🛂" }
+    { key: "acuerdo",   label: "Acuerdo de voluntades", icon: ICONS.fileText },
+    { key: "cv",        label: "Hoja de vida",           icon: ICONS.clipboard },
+    { key: "documento", label: "Documento de identidad", icon: ICONS.idCard },
+    { key: "pasaporte", label: "Pasaporte",              icon: ICONS.globe }
   ];
   const docsWrap = document.getElementById("docsWrap");
   docsWrap.innerHTML = "";
@@ -912,27 +1090,27 @@ function renderDashboard(d) {
   const historial = d.historialPagos || [];
   if (d.proceso || historial.length > 0) {
     document.getElementById("cardAbonos").style.display = "";
-    const wrap = document.getElementById("abonosWrap");
-    wrap.innerHTML = "";
+    const wrapA = document.getElementById("abonosWrap");
+    wrapA.innerHTML = "";
     if (historial.length === 0) {
-      wrap.innerHTML = `<p style="color:var(--muted);font-size:13px;">Aún no tienes pagos registrados.</p>`;
+      wrapA.innerHTML = `<p style="color:var(--muted);font-size:13px;">Aún no tienes pagos registrados.</p>`;
     } else {
       historial.forEach(p => {
         const div = document.createElement("div");
-        div.style.cssText = "padding:12px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:10px;";
+        div.className = "pago-row";
         div.innerHTML = `
+          <div class="pago-row-icon">${ICONS.card}</div>
           <div style="min-width:0;">
-            <div style="font-size:13px;font-weight:600;">${p.concepto}</div>
+            <div style="font-size:13px;font-weight:700;">${p.concepto}</div>
             <div style="font-size:12px;color:var(--muted);">${p.fecha || ""}</div>
           </div>
-          <a href="${p.comprobante}" target="_blank" rel="noopener" download
-             style="font-size:12px;font-weight:700;color:var(--green);white-space:nowrap;">⬇ Descargar</a>`;
-        wrap.appendChild(div);
+          <a href="${p.comprobante}" target="_blank" rel="noopener" download class="pago-dl">${ICONS.download} Descargar</a>`;
+        wrapA.appendChild(div);
       });
     }
   }
 
-  // Notificaciones (placeholder — se pobla si el workflow devuelve notifs)
+  // Notificaciones (se pobla si el workflow devuelve notifs)
   if (d.notificaciones && d.notificaciones.length > 0) {
     const nw = document.getElementById("notifsWrap");
     nw.innerHTML = "";
