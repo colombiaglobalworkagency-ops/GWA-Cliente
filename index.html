@@ -9,6 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="GWA">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="preload" as="image" href="logo-color.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap"
@@ -318,6 +319,20 @@
       box-shadow: 0 3px 10px rgba(224,27,27,.25);
     }
 
+    /* ── TARJETA ASESOR ── */
+    .asesor-card { display: flex; align-items: center; gap: 14px; }
+    .asesor-avatar {
+      width: 48px; height: 48px; border-radius: 50%; flex-shrink: 0;
+      background: var(--brand-grad); color: #fff; font-size: 19px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 12px rgba(224,27,27,.25);
+    }
+    .asesor-label {
+      font-size: 11px; font-weight: 800; color: var(--muted);
+      text-transform: uppercase; letter-spacing: .6px;
+    }
+    .asesor-nombre { font-size: 17px; font-weight: 800; letter-spacing: -.01em; margin-top: 2px; }
+
     /* ── PAGO INFO ── */
     .pago-nums { display: flex; gap: 0; margin: 14px 0 10px; }
     .pago-num { flex: 1; text-align: center; }
@@ -421,7 +436,7 @@
 ══════════════════════════════════════════ -->
 <div class="screen active" id="screenLogin">
   <div class="hero">
-    <img src="logo-color.png" alt="Global Work Agency">
+    <img src="logo-color.png" alt="Global Work Agency" width="173" height="64">
     <h2>Mi proceso GWA</h2>
     <p>Consulta el estado de tu proceso de movilidad laboral</p>
   </div>
@@ -443,7 +458,7 @@
 ══════════════════════════════════════════ -->
 <div class="screen" id="screenOtp">
   <div class="hero">
-    <img src="logo-color.png" alt="Global Work Agency">
+    <img src="logo-color.png" alt="Global Work Agency" width="173" height="64">
     <h2>Código de verificación</h2>
     <p id="otpSubtitulo">Ingresa el código que enviamos a tu celular</p>
   </div>
@@ -516,6 +531,15 @@
   </header>
 
   <div class="scroll">
+
+    <!-- TU ASESOR -->
+    <div class="card asesor-card">
+      <div class="asesor-avatar" id="asesorInicial">?</div>
+      <div>
+        <div class="asesor-label">Tu asesor</div>
+        <div class="asesor-nombre" id="asesorNombre">Asesor por asignar</div>
+      </div>
+    </div>
 
     <!-- PROGRESO DEL PROCESO -->
     <div class="card">
@@ -1025,7 +1049,12 @@ function renderDashboard(d) {
   const ini = (sesion.nombre || d.nombre || "?")[0].toUpperCase();
   document.getElementById("dashAvatar").textContent = ini;
   document.getElementById("dashNombre").textContent = d.nombre || sesion.nombre;
-  document.getElementById("dashAsesor").textContent = d.asesor ? `Asesor: ${d.asesor}` : "Global Work Agency";
+  document.getElementById("dashAsesor").textContent = "Global Work Agency";
+
+  // Tu asesor (owner GHL)
+  const asesor = (d.asesor || "").trim();
+  document.getElementById("asesorNombre").textContent = asesor || "Asesor por asignar";
+  document.getElementById("asesorInicial").textContent = asesor ? asesor[0].toUpperCase() : "?";
 
   // Etapas
   const etapaActual = d.proceso ? d.proceso.etapaIndex : -1;
