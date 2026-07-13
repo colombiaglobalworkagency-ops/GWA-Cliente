@@ -2,10 +2,10 @@
   "name": "Global Work Agency",
   "short_name": "GWA",
   "description": "Consulta el estado de tu proceso de movilidad laboral",
-  "start_url": "/cliente/index.html",
+  "start_url": "/GWA-Cliente/index.html",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#111111",
+  "theme_color": "#ffffff",
   "orientation": "portrait",
   "icons": [
     { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },

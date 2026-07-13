@@ -3,36 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#111111">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap"
+        rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap" rel="stylesheet"></noscript>
   <title>Pago exitoso — GWA</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: -apple-system, "Segoe UI", Montserrat, sans-serif;
-      background: #f9fafb; min-height: 100dvh;
+      font-family: "Manrope", -apple-system, "Segoe UI", sans-serif;
+      background: #FAFAFC; min-height: 100dvh;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       padding: 40px 30px; text-align: center;
     }
+    .logo { height: 44px; width: auto; object-fit: contain; margin-bottom: 36px; }
     .icon {
-      width: 80px; height: 80px; background: #16a34a; border-radius: 50%;
-      color: #fff; font-size: 36px;
+      width: 84px; height: 84px; background: #16a34a; border-radius: 50%;
+      color: #fff;
       display: flex; align-items: center; justify-content: center;
       margin: 0 auto 24px;
-      animation: popIn .4s cubic-bezier(.175,.885,.32,1.275) forwards;
+      animation: popIn .45s cubic-bezier(.22,1,.36,1) forwards;
     }
-    @keyframes popIn { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
-    h1 { font-size: 24px; font-weight: 800; margin-bottom: 12px; color: #111; }
+    .icon svg { width: 38px; height: 38px; }
+    @keyframes popIn { from{transform:scale(.4);opacity:0} to{transform:scale(1);opacity:1} }
+    h1 { font-size: 24px; font-weight: 800; margin-bottom: 12px; color: #17181C; letter-spacing: -.02em; }
     p  { font-size: 14px; color: #6b7280; line-height: 1.6; max-width: 300px; margin: 0 auto 32px; }
     a  {
       display: block; width: 100%; max-width: 300px; padding: 16px;
-      background: #111; color: #fff; border-radius: 50px;
-      font-size: 15px; font-weight: 700; text-decoration: none;
-      margin: 0 auto;
+      background: linear-gradient(135deg, #E01B1B 0%, #A31212 100%);
+      color: #fff; border-radius: 50px;
+      font-size: 15px; font-weight: 800; text-decoration: none;
+      margin: 0 auto; box-shadow: 0 6px 18px rgba(224,27,27,.28);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: .001s !important; transition-duration: .001s !important; }
     }
   </style>
 </head>
 <body>
-  <div class="icon">✓</div>
+  <img class="logo" src="logo-color.png" alt="Global Work Agency">
+  <div class="icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
   <h1>¡Pago recibido!</h1>
   <p>Tu pago fue procesado exitosamente. En unos minutos tu proceso quedará activo y podrás verlo desde la app.</p>
   <a href="index.html">Ver mi proceso →</a>
