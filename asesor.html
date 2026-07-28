@@ -62,8 +62,11 @@
       flex-shrink: 0; transition: background .2s;
     }
     .back-btn:hover { background: var(--border); }
-    .header-info h1 { font-size: 17px; font-weight: 800; letter-spacing: -.01em; }
-    .header-info p  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .header-info { min-width: 0; }
+    .header-info h1 { font-size: 17px; font-weight: 800; letter-spacing: -.01em;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .header-info p  { font-size: 12px; color: var(--muted); margin-top: 2px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
     /* ── SCROLL ── */
     .scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
@@ -367,29 +370,7 @@
     .pago-num + .pago-num { border-left: 1px solid var(--border); }
 
     /* ── EMPTY ── */
-    .empty-state {
-      flex: 1; display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 40px 30px; text-align: center; gap: 16px;
-    }
-    .empty-icon {
-      width: 88px; height: 88px; border-radius: 50%;
-      background: var(--brand-soft); color: var(--brand);
-      display: flex; align-items: center; justify-content: center;
-    }
-    .empty-icon svg { width: 44px; height: 44px; }
-    .empty-state h2 { font-size: 22px; font-weight: 800; letter-spacing: -.02em; }
-    .empty-state p { font-size: 14px; color: var(--muted); line-height: 1.6; max-width: 280px; }
     .empty-inline { text-align: center; padding: 22px 10px; color: var(--muted); font-size: 13px; }
-
-    /* ── SKELETON ── */
-    .sk {
-      border-radius: 8px;
-      background: linear-gradient(100deg, #ECEDF1 40%, #F7F8FA 50%, #ECEDF1 60%);
-      background-size: 200% 100%;
-      animation: shimmer 1.3s linear infinite;
-    }
-    @keyframes shimmer { to { background-position: -200% 0; } }
 
     /* ── TOAST ── */
     #toast {
@@ -521,7 +502,7 @@
 
     <div class="buscador">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-      <input type="search" id="inputBuscar" placeholder="Buscar por nombre o teléfono"
+      <input type="search" id="inputBuscar" placeholder="Buscar por nombre o país"
              oninput="renderClientes()" autocomplete="off">
     </div>
 
@@ -573,7 +554,7 @@
       <div class="etapas" id="etapasWrap"></div>
       <div class="etapas-labels" id="etapasLabels"></div>
       <p style="font-size:12px;color:var(--muted);margin:14px 0 10px;">
-        Toca una etapa para mover al cliente. El cambio se refleja en su app y en el Sheet.
+        Toca una etapa para mover al cliente. El cambio se refleja en su app.
       </p>
       <div class="etapa-picker" id="etapaPicker"></div>
     </div>
@@ -602,7 +583,7 @@
 </div>
 
 <!-- ══════════════════════════════════════════
-     PANTALLA 5 — REGISTRAR PAGO
+     PANTALLA 5 — REGISTRAR PAGO (solo precio + soporte)
 ══════════════════════════════════════════ -->
 <div class="screen" id="screenPago">
   <div class="app-header">
@@ -616,41 +597,10 @@
 
   <div class="scroll">
     <div class="card">
-      <div class="card-title">Datos del pago</div>
-
-      <div class="campo">
-        <label for="pagoValor">Valor pagado</label>
-        <div class="precio-row">
-          <select id="pagoDivisa">
-            <option value="COP">COP</option>
-            <option value="USD">USD</option>
-            <option value="EUR">EUR</option>
-            <option value="PLN">PLN</option>
-          </select>
-          <input type="number" id="pagoValor" placeholder="Ej: 500000" min="0" inputmode="numeric">
-        </div>
-      </div>
-
-      <div class="campo">
-        <label for="pagoFecha">Fecha del pago</label>
-        <input type="date" id="pagoFecha">
-      </div>
-
-      <div class="campo">
-        <label for="pagoMetodo">Medio de pago</label>
-        <select id="pagoMetodo">
-          <option value="Transferencia">Transferencia bancaria</option>
-          <option value="Nequi">Nequi</option>
-          <option value="Daviplata">Daviplata</option>
-          <option value="Efectivo">Efectivo</option>
-          <option value="Consignación">Consignación</option>
-          <option value="Otro">Otro</option>
-        </select>
-      </div>
-
+      <div class="card-title">Valor del pago</div>
       <div class="campo" style="margin-bottom:0;">
-        <label for="pagoNota">Nota (opcional)</label>
-        <textarea id="pagoNota" placeholder="Referencia, banco, observaciones..."></textarea>
+        <label for="pagoValor">Precio pagado por el cliente (COP)</label>
+        <input type="number" id="pagoValor" placeholder="Ej: 500000" min="0" inputmode="numeric">
       </div>
     </div>
 
@@ -690,7 +640,7 @@
       El soporte quedó guardado y el cliente ya lo verá en su app.
     </p>
     <button class="btn btn-primary" style="margin-top:26px;max-width:280px;"
-            onclick="abrirCliente(clienteActual.contactId)">Volver al cliente</button>
+            onclick="abrirCliente(clienteActual)">Volver al cliente</button>
   </div>
 </div>
 
@@ -699,33 +649,41 @@
 
 <script>
 /* ══════════════════════════════════════════
-   CONFIGURACIÓN
+   CONFIGURACIÓN — endpoints reales de n8n
 ══════════════════════════════════════════ */
 const BASE = "https://app.rioagencymarketing.com/webhook";
 const WH = {
   login:      BASE + "/asesor-login",
   otp:        BASE + "/asesor-verificar-otp",
-  clientes:   BASE + "/asesor-clientes",
-  cliente:    BASE + "/asesor-cliente",
-  etapa:      BASE + "/asesor-cambiar-etapa",
-  documento:  BASE + "/asesor-subir-documento",
-  pago:       BASE + "/asesor-registrar-pago"
+  perfilados: BASE + "/asesor-perfilados",
+  detalle:    BASE + "/asesor-detalle",
+  etapa:      BASE + "/asesor-etapa",
+  documento:  BASE + "/cliente-subir-documento",   // reutilizado (sube a GHL + Sheet)
+  pago:       BASE + "/registrar-abono"            // reutilizado (soporte + suma a Pagado)
 };
 
-const ETAPAS = ["Perfilado","Documentos","En proceso","Finalizado"];
+const ETAPAS = ["Perfilado", "Documentos", "En proceso", "Finalizado"];
 
+// IDs de las etapas en el pipeline de GHL (índice = etapaIndex)
+const STAGE_IDS = [
+  "49c81ecd-195b-436f-8914-ccb5744baa2b", // 0 Perfilado
+  "553471ca-d2f3-4551-965d-2149d924e48e", // 1 Documentos
+  "26840b35-5d91-41a4-9ce5-c3c18e676355", // 2 En proceso
+  "f37a3e1a-4a80-4b61-b8ee-08f17355421e"  // 3 Finalizado
+];
+
+// tipoDoc -> etiqueta. Las columnas del Sheet las mapea el webhook.
 const DOCS = [
-  { key: "acuerdo",   label: "Acuerdo de servicio" },
+  { key: "acuerdo",   label: "Acuerdo de voluntades" },
   { key: "cv",        label: "Hoja de vida" },
-  { key: "doc",       label: "Documento de identidad" },
+  { key: "documento", label: "Documento de identidad" },
   { key: "pasaporte", label: "Pasaporte" }
 ];
 
 const ICONS = {
   fileText: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
   card: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>',
-  chevron: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>',
-  users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>'
+  chevron: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>'
 };
 
 /* ══════════════════════════════════════════
@@ -734,7 +692,7 @@ const ICONS = {
 let sesion = null;
 try { sesion = JSON.parse(sessionStorage.getItem("gwa_asesor")); } catch(e){}
 
-let clientes = [];          // lista completa devuelta por el webhook
+let perfilados = [];        // lista devuelta por asesor-perfilados
 let filtroEtapa = -1;       // -1 = todas
 let clienteActual = null;   // detalle del cliente abierto
 
@@ -764,7 +722,7 @@ async function enviarOTP() {
       irA("screenOtp");
       setTimeout(() => document.querySelector(".otp-digit").focus(), 250);
     } else {
-      toast(r.mensaje || "No encontramos un asesor con ese número");
+      toast(r.error || r.mensaje || "No encontramos un asesor con ese número");
     }
   } catch(e) { hideLoader(); toast("Error de conexión"); }
 }
@@ -800,11 +758,14 @@ async function verificarOTP() {
     const r = await post(WH.otp, { telefono: tel, otp });
     hideLoader();
     if (r.ok && r.asesorId) {
-      sesion = { asesorId: r.asesorId, nombre: r.nombre || "", telefono: tel };
+      sesion = {
+        asesorId: r.asesorId, nombre: r.nombre || "",
+        isAdmin: r.isAdmin === true, telefono: tel
+      };
       sessionStorage.setItem("gwa_asesor", JSON.stringify(sesion));
       cargarClientes();
     } else {
-      toast(r.mensaje || "Código incorrecto");
+      toast(r.error || r.mensaje || "Código incorrecto");
       document.querySelectorAll(".otp-digit").forEach(i => i.value = "");
       document.querySelector(".otp-digit").focus();
     }
@@ -829,20 +790,21 @@ async function cargarClientes() {
   if (!sesion?.asesorId) { irA("screenLogin"); return; }
   showLoader("Cargando tus clientes...");
   try {
-    const r = await post(WH.clientes, { asesorId: sesion.asesorId });
+    const r = await post(WH.perfilados, { asesorId: sesion.asesorId, isAdmin: !!sesion.isAdmin });
     hideLoader();
-    if (!r.ok) { toast(r.mensaje || "No se pudieron cargar los clientes"); return; }
+    if (!r.ok) { toast(r.error || r.mensaje || "No se pudieron cargar los clientes"); return; }
 
-    clientes = r.clientes || [];
-    const ini = (r.nombre || sesion.nombre || "?")[0].toUpperCase();
+    perfilados = r.perfilados || [];
+    const ini = (sesion.nombre || "?")[0].toUpperCase();
     document.getElementById("asesorAvatar").textContent = ini;
-    document.getElementById("asesorNombre").textContent = r.nombre || sesion.nombre || "Mis clientes";
+    document.getElementById("asesorNombre").textContent =
+      sesion.isAdmin ? "Todos los clientes" : (sesion.nombre || "Mis clientes");
     document.getElementById("asesorSub").textContent =
-      clientes.length === 1 ? "1 cliente asignado" : `${clientes.length} clientes asignados`;
+      perfilados.length === 1 ? "1 cliente" : `${perfilados.length} clientes`;
 
-    document.getElementById("stTotal").textContent   = clientes.length;
-    document.getElementById("stProceso").textContent = clientes.filter(c => c.etapaIndex === 2).length;
-    document.getElementById("stFin").textContent     = clientes.filter(c => c.etapaIndex === 3).length;
+    document.getElementById("stTotal").textContent   = perfilados.length;
+    document.getElementById("stProceso").textContent = perfilados.filter(c => c.etapaIndex === 2).length;
+    document.getElementById("stFin").textContent     = perfilados.filter(c => c.etapaIndex === 3).length;
 
     renderFiltros();
     renderClientes();
@@ -857,7 +819,7 @@ function renderFiltros() {
   opciones.forEach(o => {
     const b = document.createElement("button");
     b.className = "chip" + (o.i === filtroEtapa ? " on" : "");
-    const n = o.i === -1 ? clientes.length : clientes.filter(c => c.etapaIndex === o.i).length;
+    const n = o.i === -1 ? perfilados.length : perfilados.filter(c => c.etapaIndex === o.i).length;
     b.textContent = `${o.t} (${n})`;
     b.onclick = () => { filtroEtapa = o.i; renderFiltros(); renderClientes(); };
     wrap.appendChild(b);
@@ -869,11 +831,11 @@ function renderClientes() {
   const lista = document.getElementById("listaClientes");
   lista.innerHTML = "";
 
-  const filtrados = clientes.filter(c => {
+  const filtrados = perfilados.filter(c => {
     if (filtroEtapa !== -1 && c.etapaIndex !== filtroEtapa) return false;
     if (!q) return true;
     return (c.nombre || "").toLowerCase().includes(q) ||
-           (c.telefono || "").replace(/\s/g,"").includes(q.replace(/\s/g,""));
+           (c.pais || "").toLowerCase().includes(q);
   });
 
   if (!filtrados.length) {
@@ -886,13 +848,15 @@ function renderClientes() {
     const btn = document.createElement("button");
     btn.className = "cliente-item";
     btn.style.animationDelay = Math.min(idx * .04, .4) + "s";
-    btn.onclick = () => abrirCliente(c.contactId);
+    btn.onclick = () => abrirCliente(c);
+    const metaAdmin = sesion.isAdmin && c.asesorNombre ? " · " + esc(c.asesorNombre) : "";
     btn.innerHTML = `
-      <div class="avatar sm">${(c.nombre || "?")[0].toUpperCase()}</div>
+      <div class="avatar sm">${((c.nombre || "?").trim()[0] || "?").toUpperCase()}</div>
       <div class="cliente-info">
-        <div class="cliente-nombre">${esc(c.nombre || "Sin nombre")}</div>
-        <div class="cliente-meta">${esc(c.telefono || "")}${c.pais ? " · " + esc(c.pais) : ""}</div>
-        ${et >= 0 ? `<span class="badge e${et}">${ETAPAS[et]}</span>` : `<span class="badge">Sin proceso</span>`}
+        <div class="cliente-nombre">${esc((c.nombre || "Sin nombre").trim())}</div>
+        <div class="cliente-meta">${esc(c.pais || "Sin país")}${metaAdmin}</div>
+        ${et >= 0 ? `<span class="badge e${et}">${esc(c.etapaLabel || ETAPAS[et])}</span>`
+                  : `<span class="badge">Sin proceso</span>`}
       </div>
       <div class="cliente-chev">${ICONS.chevron}</div>`;
     lista.appendChild(btn);
@@ -902,32 +866,40 @@ function renderClientes() {
 /* ══════════════════════════════════════════
    DETALLE DEL CLIENTE
 ══════════════════════════════════════════ */
-async function abrirCliente(contactId) {
+async function abrirCliente(item) {
+  // item puede ser el objeto de la lista o el clienteActual (al volver del pago)
+  const contactId = item && item.contactId;
   if (!contactId) return;
   showLoader("Cargando cliente...");
   try {
-    const r = await post(WH.cliente, { asesorId: sesion.asesorId, contactId });
+    const r = await post(WH.detalle, { contactId });
     hideLoader();
-    if (!r.ok) { toast(r.mensaje || "No se pudo cargar el cliente"); return; }
-    clienteActual = Object.assign({ contactId }, r.cliente || r);
-    renderCliente(clienteActual);
+    if (!r.ok) { toast(r.error || r.mensaje || "No se pudo cargar el cliente"); return; }
+    // combinamos lo de la lista (nombre/pais/opportunityId) con el detalle
+    clienteActual = Object.assign({}, item, r);
+    // opportunityId puede venir en ambos; priorizamos el que exista
+    clienteActual.opportunityId = r.opportunityId || (item && item.opportunityId) || "";
+    renderCliente(clienteActual, item);
     irA("screenCliente");
   } catch(e) { hideLoader(); toast("Error de conexión"); }
 }
 
-function renderCliente(d) {
-  const nombre = d.nombre || "Cliente";
+function renderCliente(d, item) {
+  const ed = d.editable || {};
+  const nombre = (ed["Nombre Completo"] || (item && item.nombre) || "Cliente").trim();
+  const telefono = (ed["Telefono"] || "").trim();
+
   document.getElementById("cliNombre").textContent  = nombre;
   document.getElementById("cliNombre2").textContent = nombre;
   document.getElementById("cliAvatar").textContent  = nombre[0].toUpperCase();
-  document.getElementById("cliTelefono").textContent = d.telefono || "Sin teléfono";
+  document.getElementById("cliTelefono").textContent = telefono || "Sin teléfono";
   document.getElementById("cliSub").textContent =
-    [d.pais, d.proceso].filter(Boolean).join(" · ") || "Global Work Agency";
+    [ed["Pais Destino"] || (item && item.pais), ed["Correo"]].filter(Boolean).join(" · ") || "Global Work Agency";
   document.getElementById("pagoCliente").textContent = nombre;
 
   // WhatsApp
   const wa = document.getElementById("btnWA");
-  const tel = (d.telefono || "").replace(/\D/g, "");
+  const tel = telefono.replace(/\D/g, "");
   if (tel) {
     const msg = encodeURIComponent(
       `Hola ${nombre.split(" ")[0]}, te saluda ${sesion?.nombre || "tu asesor"} de Global Work Agency.`);
@@ -977,21 +949,26 @@ function renderEtapas(etapaActual) {
 
 async function cambiarEtapa(nuevaIdx, nombre, actualIdx) {
   if (nuevaIdx === actualIdx) { toast("El cliente ya está en esta etapa"); return; }
-  if (!confirm(`¿Mover a ${clienteActual.nombre || "el cliente"} a la etapa "${nombre}"?`)) return;
+  if (!clienteActual.opportunityId) {
+    toast("Este cliente no tiene oportunidad en el pipeline"); return;
+  }
+  if (!confirm(`¿Mover a ${clienteActual.editable?.["Nombre Completo"] || "el cliente"} a la etapa "${nombre}"?`)) return;
   showLoader("Actualizando etapa...");
   try {
     const r = await post(WH.etapa, {
-      asesorId: sesion.asesorId,
-      contactId: clienteActual.contactId,
-      etapaIndex: nuevaIdx,
-      etapa: nombre
+      opportunityId: clienteActual.opportunityId,
+      stageId: STAGE_IDS[nuevaIdx],
+      etapaIndex: nuevaIdx
     });
     hideLoader();
-    if (!r.ok) { toast(r.mensaje || "No se pudo actualizar la etapa"); return; }
+    if (!r.ok) { toast(r.error || r.mensaje || "No se pudo actualizar la etapa"); return; }
     clienteActual.etapaIndex = nuevaIdx;
     renderEtapas(nuevaIdx);
-    const enLista = clientes.find(c => c.contactId === clienteActual.contactId);
-    if (enLista) { enLista.etapaIndex = nuevaIdx; renderFiltros(); renderClientes(); }
+    const enLista = perfilados.find(c => c.contactId === clienteActual.contactId);
+    if (enLista) {
+      enLista.etapaIndex = nuevaIdx; enLista.etapaLabel = ETAPAS[nuevaIdx];
+      renderFiltros();
+    }
     toast(`Cliente movido a "${nombre}"`);
   } catch(e) { hideLoader(); toast("Error de conexión"); }
 }
@@ -1014,20 +991,19 @@ function renderPagos(d) {
   wrap.innerHTML = "";
   const historial = d.historialPagos || [];
   if (!historial.length) {
-    wrap.innerHTML = `<div class="empty-inline">Aún no hay pagos registrados.</div>`;
+    wrap.innerHTML = `<div class="empty-inline">Aún no hay pagos con soporte.</div>`;
     return;
   }
   historial.forEach(a => {
     const div = document.createElement("div");
     div.className = "pago-row";
-    const meta = [a.fecha, a.metodo, a.registradoPor].filter(Boolean).join(" · ");
     div.innerHTML = `
       <div class="pago-row-icon">${ICONS.card}</div>
       <div style="min-width:0;">
-        <div style="font-size:14px;font-weight:800;">${esc(fmt(a.valor))} ${esc(a.divisa || "")}</div>
-        <div style="font-size:12px;color:var(--muted);margin-top:2px;">${esc(meta)}</div>
+        <div style="font-size:14px;font-weight:800;">${esc(a.concepto || "Pago")}</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px;">${esc(a.fecha || "")}</div>
       </div>
-      ${a.soporte ? `<a class="pago-dl" href="${esc(a.soporte)}" target="_blank" rel="noopener">Ver soporte</a>` : ""}`;
+      ${a.comprobante ? `<a class="pago-dl" href="${esc(a.comprobante)}" target="_blank" rel="noopener">Ver soporte</a>` : ""}`;
     wrap.appendChild(div);
   });
 }
@@ -1063,43 +1039,30 @@ function subirDoc(key, label) {
     if (!inp.files[0]) return;
     showLoader(`Subiendo ${label.toLowerCase()}...`);
     const fd = new FormData();
-    fd.append("asesorId", sesion.asesorId);
     fd.append("contactId", clienteActual.contactId);
     fd.append("tipoDoc", key);
     fd.append("archivo", inp.files[0]);
     try {
       const r = await fetchFD(WH.documento, fd);
       hideLoader();
-      if (r && r.ok === false) { toast(r.mensaje || "No se pudo subir el documento"); return; }
+      if (r && r.ok === false) { toast(r.error || r.mensaje || "No se pudo subir el documento"); return; }
       toast("Documento actualizado");
-      if (r && r.url) {
-        clienteActual.documentos = clienteActual.documentos || {};
-        clienteActual.documentos[key] = r.url;
-        renderDocs(clienteActual.documentos);
-      } else {
-        abrirCliente(clienteActual.contactId);
-      }
+      abrirCliente(clienteActual);   // recarga el detalle con el nuevo link
     } catch(e) { hideLoader(); toast("Error al subir. Intenta de nuevo."); }
   };
   inp.click();
 }
 
 /* ══════════════════════════════════════════
-   REGISTRAR PAGO
+   REGISTRAR PAGO (solo precio + soporte)
 ══════════════════════════════════════════ */
 function irAPago() {
   document.getElementById("pagoValor").value = "";
-  document.getElementById("pagoNota").value = "";
-  document.getElementById("pagoDivisa").value = clienteActual?.divisa || "COP";
-  document.getElementById("pagoMetodo").value = "Transferencia";
   document.getElementById("file-soporte").value = "";
   document.getElementById("fs-soporte").textContent = "Foto o PDF del comprobante";
   document.getElementById("fs-soporte").className = "file-st";
   document.getElementById("fi-soporte").classList.remove("ok");
   document.getElementById("previewSoporte").style.display = "none";
-  const h = new Date();
-  document.getElementById("pagoFecha").value =
-    `${h.getFullYear()}-${String(h.getMonth()+1).padStart(2,"0")}-${String(h.getDate()).padStart(2,"0")}`;
   irA("screenPago");
 }
 
@@ -1124,34 +1087,30 @@ function onSoporteChange(inp) {
 }
 
 async function enviarPago() {
-  const valor  = document.getElementById("pagoValor").value;
-  const divisa = document.getElementById("pagoDivisa").value || "COP";
-  const fecha  = document.getElementById("pagoFecha").value;
-  const metodo = document.getElementById("pagoMetodo").value;
-  const nota   = document.getElementById("pagoNota").value.trim();
-  const file   = document.getElementById("file-soporte").files[0];
+  const valor = document.getElementById("pagoValor").value;
+  const file  = document.getElementById("file-soporte").files[0];
 
   if (!valor || Number(valor) <= 0) { toast("Ingresa el valor del pago"); return; }
-  if (!fecha) { toast("Selecciona la fecha del pago"); return; }
   if (!file)  { toast("Adjunta el soporte de pago"); return; }
 
+  const h = new Date();
+  const fechaSubida =
+    `${h.getFullYear()}-${String(h.getMonth()+1).padStart(2,"0")}-${String(h.getDate()).padStart(2,"0")} ` +
+    `${String(h.getHours()).padStart(2,"0")}:${String(h.getMinutes()).padStart(2,"0")}`;
+
+  // El webhook registrar-abono acepta valorPago_1..6 + pdfPago_1..6
   const fd = new FormData();
-  fd.append("asesorId", sesion.asesorId);
-  fd.append("asesorNombre", sesion.nombre || "");
   fd.append("contactId", clienteActual.contactId);
-  fd.append("clienteNombre", clienteActual.nombre || "");
-  fd.append("valor", valor);
-  fd.append("divisa", divisa);
-  fd.append("fecha", fecha);
-  fd.append("metodo", metodo);
-  fd.append("nota", nota);
-  fd.append("soporte", file);
+  fd.append("valorPago_1", valor);
+  fd.append("pdfPago_1", file);
+  fd.append("fechaSubida", fechaSubida);
+  fd.append("registradoPor", sesion.nombre || "");
 
   showLoader("Guardando pago...");
   try {
     const r = await fetchFD(WH.pago, fd);
     hideLoader();
-    if (r && r.ok === false) { toast(r.mensaje || "No se pudo guardar el pago"); return; }
+    if (r && r.ok === false) { toast(r.error || r.mensaje || "No se pudo guardar el pago"); return; }
     irA("screenPagoOk");
   } catch(e) { hideLoader(); toast("Error de conexión. Intenta de nuevo."); }
 }
@@ -1160,7 +1119,7 @@ async function enviarPago() {
    SESIÓN
 ══════════════════════════════════════════ */
 function cerrarSesion() {
-  sesion = null; clientes = []; clienteActual = null;
+  sesion = null; perfilados = []; clienteActual = null;
   sessionStorage.removeItem("gwa_asesor");
   document.getElementById("inputTelefono").value = "";
   document.querySelectorAll(".otp-digit").forEach(i => i.value = "");
