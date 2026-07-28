@@ -363,11 +363,19 @@
 
     /* ── PAGO INFO ── */
     .pago-nums { display: flex; gap: 0; margin: 14px 0 10px; }
-    .pago-num { flex: 1; text-align: center; }
-    .pago-num .valor { font-size: 18px; font-weight: 800; color: var(--black);
-      font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
-    .pago-num .lbl { font-size: 11px; color: var(--muted); margin-top: 2px; font-weight: 600; }
+    .pago-num { flex: 1; text-align: center; padding: 0 4px; min-width: 0; }
+    .pago-num .valor { font-size: 15px; font-weight: 800; color: var(--black);
+      font-variant-numeric: tabular-nums; letter-spacing: -.03em; line-height: 1.15;
+      white-space: nowrap; }
+    .pago-num .lbl { font-size: 10px; color: var(--muted); margin-top: 3px; font-weight: 600; }
     .pago-num + .pago-num { border-left: 1px solid var(--border); }
+    @media (max-width: 400px) {
+      .pago-num .valor { font-size: 13px; letter-spacing: -.04em; }
+      .pago-num { padding: 0 2px; }
+    }
+    @media (max-width: 340px) {
+      .pago-num .valor { font-size: 12px; }
+    }
 
     /* ── EMPTY ── */
     .empty-inline { text-align: center; padding: 22px 10px; color: var(--muted); font-size: 13px; }
@@ -470,7 +478,7 @@
       Solo asesores registrados en Global Work Agency.<br>
       ¿Eres cliente? <a href="index.html" style="color:var(--brand);font-weight:800;text-decoration:none;">Entra aquí</a>
     </p>
-    <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:14px;opacity:.7;">Versión 8</p>
+    <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:14px;opacity:.7;">Versión 9</p>
   </div>
 </div>
 
