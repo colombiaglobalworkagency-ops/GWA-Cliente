@@ -1,4 +1,4 @@
-const CACHE = "gwa-cliente-v4";
+const CACHE = "gwa-cliente-v5";
 const BASE = self.location.pathname.replace(/\/sw\.js$/, "");
 const ASSETS = [BASE + "/", BASE + "/index.html", BASE + "/manifest.json", BASE + "/logo-color.png", BASE + "/pago-exitoso.html"];
 

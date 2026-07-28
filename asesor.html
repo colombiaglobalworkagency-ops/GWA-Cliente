@@ -874,9 +874,10 @@ async function abrirCliente(item) {
   try {
     // Reintenta si el webhook responde vacío (cuota de Google Sheets por minuto)
     let r = await post(WH.detalle, { contactId });
-    for (let intento = 0; r.vacio && intento < 3; intento++) {
-      showLoader("Cargando cliente" + ".".repeat(intento + 1));
-      await new Promise(res => setTimeout(res, 1500));
+    const esperas = [1200, 2000, 3000, 4000, 5000];
+    for (let intento = 0; r.vacio && intento < esperas.length; intento++) {
+      showLoader("Cargando cliente" + ".".repeat((intento % 3) + 1));
+      await new Promise(res => setTimeout(res, esperas[intento]));
       r = await post(WH.detalle, { contactId });
     }
     hideLoader();
