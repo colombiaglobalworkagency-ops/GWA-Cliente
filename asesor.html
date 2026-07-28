@@ -470,7 +470,7 @@
       Solo asesores registrados en Global Work Agency.<br>
       ¿Eres cliente? <a href="index.html" style="color:var(--brand);font-weight:800;text-decoration:none;">Entra aquí</a>
     </p>
-    <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:14px;opacity:.7;">Versión 7</p>
+    <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:14px;opacity:.7;">Versión 8</p>
   </div>
 </div>
 
@@ -518,6 +518,17 @@
       <div class="stat"><div class="v" id="stTotal">—</div><div class="l">Clientes</div></div>
       <div class="stat"><div class="v" id="stProceso">—</div><div class="l">En proceso</div></div>
       <div class="stat"><div class="v" id="stFin">—</div><div class="l">Finalizados</div></div>
+    </div>
+
+    <div class="card" id="resumenPagos">
+      <div class="card-title" id="resumenTitulo">Resumen de pagos</div>
+      <div class="pago-nums">
+        <div class="pago-num"><div class="valor" id="resPagado">$0</div><div class="lbl">Pagado</div></div>
+        <div class="pago-num"><div class="valor" id="resRestante">$0</div><div class="lbl">Por cobrar</div></div>
+        <div class="pago-num"><div class="valor" id="resTotal">$0</div><div class="lbl">Total</div></div>
+      </div>
+      <div class="progress-track" style="margin-top:6px;"><div class="progress-fill green" id="resBar" style="width:0%"></div></div>
+      <p style="font-size:12px;color:var(--muted);text-align:right;margin-top:6px;" id="resPct">0% recaudado</p>
     </div>
 
     <div class="buscador">
@@ -597,6 +608,18 @@
     <div class="card">
       <div class="card-title">Documentos</div>
       <div id="docsWrap"></div>
+    </div>
+
+    <!-- Notificar al cliente -->
+    <div class="card">
+      <div class="card-title">Notificar al cliente</div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5;">
+        El mensaje le aparecerá al cliente en sus notificaciones dentro de la app.
+      </p>
+      <div class="campo" style="margin-bottom:12px;">
+        <textarea id="notaTexto" maxlength="500" placeholder="Ej: Ya revisamos tus documentos, todo en orden. Continuamos con tu proceso."></textarea>
+      </div>
+      <button class="btn btn-primary" onclick="enviarNota()">Enviar notificación</button>
     </div>
 
   </div>
@@ -689,7 +712,8 @@ const WH = {
   detalle:    BASE + "/asesor-detalle",
   etapa:      BASE + "/asesor-etapa",
   documento:  BASE + "/cliente-subir-documento",   // reutilizado (sube a GHL + Sheet)
-  pago:       BASE + "/registrar-abono"            // reutilizado (soporte + suma a Pagado)
+  pago:       BASE + "/registrar-abono",           // reutilizado (soporte + suma a Pagado)
+  nota:       BASE + "/asesor-nota"                // crea nota [cliente] en GHL -> notificación
 };
 
 const ETAPAS = ["Perfilado", "Documentos", "En proceso", "Finalizado"];
@@ -841,10 +865,33 @@ async function cargarClientes() {
     document.getElementById("stProceso").textContent = perfilados.filter(c => c.etapaIndex === 2).length;
     document.getElementById("stFin").textContent     = perfilados.filter(c => c.etapaIndex === 3).length;
 
+    renderResumenPagos(r.resumen);
     renderFiltros();
     renderClientes();
     irA("screenClientes");
   } catch(e) { hideLoader(); toast("Error de conexión"); }
+}
+
+function renderResumenPagos(resumen) {
+  // Fallback: si el webhook no manda resumen, lo calculamos de la lista
+  let pagado, total;
+  if (resumen && (resumen.totalPagado != null || resumen.totalMeta != null)) {
+    pagado = Number(resumen.totalPagado || 0);
+    total  = Number(resumen.totalMeta || 0);
+  } else {
+    pagado = perfilados.reduce((s, c) => s + Number(c.pagado || 0), 0);
+    total  = perfilados.reduce((s, c) => s + Number(c.total  || 0), 0);
+  }
+  const restante = Math.max(total - pagado, 0);
+  const pct = total > 0 ? Math.round(pagado / total * 100) : 0;
+
+  document.getElementById("resumenTitulo").textContent =
+    sesion.isAdmin ? "Resumen de pagos · Todos" : "Resumen de pagos · Tus clientes";
+  document.getElementById("resPagado").textContent   = fmt(pagado);
+  document.getElementById("resRestante").textContent = fmt(restante);
+  document.getElementById("resTotal").textContent    = fmt(total);
+  document.getElementById("resBar").style.width      = Math.min(pct, 100) + "%";
+  document.getElementById("resPct").textContent      = pct + "% recaudado";
 }
 
 function renderFiltros() {
@@ -965,6 +1012,8 @@ function renderCliente(d, item) {
   renderEtapas(typeof d.etapaIndex === "number" ? d.etapaIndex : -1);
   renderPagos(d);
   renderDocs(d.documentos || {});
+  const nt = document.getElementById("notaTexto");
+  if (nt) nt.value = "";
 }
 
 /* ── ETAPAS ── */
@@ -1107,6 +1156,27 @@ function subirDoc(key, label) {
 }
 
 /* ══════════════════════════════════════════
+   NOTIFICAR AL CLIENTE
+══════════════════════════════════════════ */
+async function enviarNota() {
+  const texto = document.getElementById("notaTexto").value.trim();
+  if (!texto) { toast("Escribe el mensaje para el cliente"); return; }
+  if (!clienteActual?.contactId) { toast("Cliente no válido"); return; }
+  showLoader("Enviando notificación...");
+  try {
+    const r = await post(WH.nota, {
+      contactId: clienteActual.contactId,
+      asesorId: sesion.asesorId || "",
+      texto: texto
+    });
+    hideLoader();
+    if (r && r.ok === false) { toast(r.error || r.mensaje || "No se pudo enviar"); return; }
+    document.getElementById("notaTexto").value = "";
+    toast("Notificación enviada al cliente");
+  } catch(e) { hideLoader(); toast("Error de conexión"); }
+}
+
+/* ══════════════════════════════════════════
    REGISTRAR PAGO (solo precio + soporte)
 ══════════════════════════════════════════ */
 function irAPago() {
@@ -1209,7 +1279,7 @@ async function fetchFD(url, fd) {
 
 function fmt(n) {
   if (!n) return "$0";
-  return "$" + Number(n).toLocaleString("es-CO");
+  return "$" + Math.round(Number(n)).toLocaleString("es-CO");
 }
 
 function esc(s) {
