@@ -1129,14 +1129,21 @@ function cerrarSesion() {
 /* ══════════════════════════════════════════
    HELPERS
 ══════════════════════════════════════════ */
+async function parseSafe(r) {
+  // El webhook a veces responde 200 con cuerpo vacío; no reventamos.
+  const txt = await r.text();
+  if (!txt || !txt.trim()) return { ok: false, vacio: true, error: "El servidor no respondió, intenta de nuevo." };
+  try { return JSON.parse(txt); }
+  catch(e) { return { ok: false, error: "Respuesta no válida del servidor." }; }
+}
 async function post(url, data) {
   const r = await fetch(url, { method:"POST",
     headers:{"Content-Type":"application/json"}, body: JSON.stringify(data) });
-  return r.json();
+  return parseSafe(r);
 }
 async function fetchFD(url, fd) {
   const r = await fetch(url, { method:"POST", body: fd });
-  return r.json();
+  return parseSafe(r);
 }
 
 function fmt(n) {
