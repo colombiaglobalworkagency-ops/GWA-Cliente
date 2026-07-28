@@ -872,7 +872,13 @@ async function abrirCliente(item) {
   if (!contactId) return;
   showLoader("Cargando cliente...");
   try {
-    const r = await post(WH.detalle, { contactId });
+    // Reintenta si el webhook responde vacío (cuota de Google Sheets por minuto)
+    let r = await post(WH.detalle, { contactId });
+    for (let intento = 0; r.vacio && intento < 3; intento++) {
+      showLoader("Cargando cliente" + ".".repeat(intento + 1));
+      await new Promise(res => setTimeout(res, 1500));
+      r = await post(WH.detalle, { contactId });
+    }
     hideLoader();
     if (!r.ok) { toast(r.error || r.mensaje || "No se pudo cargar el cliente"); return; }
     // combinamos lo de la lista (nombre/pais/opportunityId) con el detalle
