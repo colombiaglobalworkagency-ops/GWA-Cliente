@@ -1,0 +1,15 @@
+{
+  "name": "GWA Asesores",
+  "short_name": "GWA Asesor",
+  "description": "Portal de asesores de Global Work Agency",
+  "start_url": "asesor.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#E01B1B",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

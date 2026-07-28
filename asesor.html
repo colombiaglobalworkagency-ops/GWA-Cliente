@@ -7,6 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="GWA Asesor">
+  <link rel="manifest" href="asesor-manifest.json">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <link rel="preload" as="image" href="logo-color.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -478,7 +479,7 @@
       Solo asesores registrados en Global Work Agency.<br>
       ¿Eres cliente? <a href="index.html" style="color:var(--brand);font-weight:800;text-decoration:none;">Entra aquí</a>
     </p>
-    <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:14px;opacity:.7;">Versión 9</p>
+    <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:14px;opacity:.7;">Versión 10</p>
   </div>
 </div>
 
@@ -1312,6 +1313,10 @@ function toast(msg, ms = 3000) {
    INIT
 ══════════════════════════════════════════ */
 if (sesion?.asesorId) { cargarClientes(); }
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+}
 </script>
 </body>
 </html>
