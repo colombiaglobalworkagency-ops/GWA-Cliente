@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -14,7 +14,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap"
         rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet"></noscript>
-  <title>GWA Â· Asesores</title>
+  <title>GWA · Asesores</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -42,12 +42,12 @@
       background: #FAFAFC; color: var(--text); overflow-x: hidden;
     }
 
-    /* â”€â”€ PANTALLAS â”€â”€ */
+    /* ── PANTALLAS ── */
     .screen { display: none; min-height: 100dvh; flex-direction: column; background: #FAFAFC; }
     .screen.active { display: flex; animation: screenIn .3s var(--ease); }
     @keyframes screenIn { from { opacity: 0; transform: translateX(16px); } }
 
-    /* â”€â”€ HEADER â”€â”€ */
+    /* ── HEADER ── */
     .app-header {
       background: #fff; color: var(--text);
       padding: calc(var(--safe-top) + 16px) 20px 16px;
@@ -68,11 +68,11 @@
     .header-info p  { font-size: 12px; color: var(--muted); margin-top: 2px;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    /* â”€â”€ SCROLL â”€â”€ */
+    /* ── SCROLL ── */
     .scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
       padding: 20px 20px calc(var(--safe-bot) + 100px); }
 
-    /* â”€â”€ HERO â”€â”€ */
+    /* ── HERO ── */
     .hero {
       background: #fff;
       padding: calc(var(--safe-top) + 56px) 24px 40px;
@@ -95,7 +95,7 @@
       padding: 5px 12px; border-radius: 99px; position: relative;
     }
 
-    /* â”€â”€ CARDS â”€â”€ */
+    /* ── CARDS ── */
     .card {
       background: #fff; border-radius: var(--r);
       border: 1px solid var(--border); padding: 20px; margin-bottom: 14px;
@@ -109,7 +109,7 @@
       display: flex; align-items: center; gap: 8px;
     }
 
-    /* â”€â”€ INPUTS â”€â”€ */
+    /* ── INPUTS ── */
     .campo { margin-bottom: 16px; }
     .campo label { display: block; font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
     .campo input, .campo select, .campo textarea {
@@ -128,7 +128,7 @@
       background-repeat: no-repeat; background-position: right 14px center; padding-right: 38px;
     }
 
-    /* â”€â”€ BOTONES â”€â”€ */
+    /* ── BOTONES ── */
     .btn {
       width: 100%; padding: 16px; border-radius: 50px; border: none;
       font-size: 15px; font-weight: 800; cursor: pointer;
@@ -146,7 +146,7 @@
     .btn:disabled { opacity: .4; pointer-events: none; }
     .btn:focus-visible, .back-btn:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
 
-    /* â”€â”€ BOTTOM BAR â”€â”€ */
+    /* ── BOTTOM BAR ── */
     .bottom-bar {
       position: fixed; bottom: 0; left: 0; right: 0;
       background: #fff; border-top: 1px solid var(--border);
@@ -155,7 +155,7 @@
     }
     .btn-sm { flex: 0 0 90px; padding: 14px 12px; font-size: 14px; }
 
-    /* â”€â”€ OTP INPUT â”€â”€ */
+    /* ── OTP INPUT ── */
     .otp-grid { display: flex; gap: 10px; justify-content: center; margin: 24px 0; }
     .otp-digit {
       width: 48px; height: 58px; border: 2px solid var(--border);
@@ -165,12 +165,12 @@
     }
     .otp-digit:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(224,27,27,.09); }
 
-    /* â”€â”€ BARRA DE PROGRESO â”€â”€ */
+    /* ── BARRA DE PROGRESO ── */
     .progress-track { height: 10px; background: var(--gray); border-radius: 99px; overflow: hidden; }
     .progress-fill { height: 100%; border-radius: 99px; transition: width .9s var(--ease); background: var(--brand); }
     .progress-fill.green { background: var(--green); }
 
-    /* â”€â”€ ETAPAS â”€â”€ */
+    /* ── ETAPAS ── */
     .etapas { display: flex; align-items: center; margin: 16px 0 8px; }
     .etapa-dot {
       width: 28px; height: 28px; border-radius: 50%;
@@ -187,7 +187,7 @@
     .etapa-label { font-size: 10px; color: var(--muted); font-weight: 700; text-align: center; flex: 1; }
     .etapa-label.active { color: var(--brand); }
 
-    /* â”€â”€ SELECTOR DE ETAPA (asesor) â”€â”€ */
+    /* ── SELECTOR DE ETAPA (asesor) ── */
     .etapa-picker { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
     .etapa-opt {
       padding: 12px 10px; border-radius: 12px; border: 1.5px solid var(--border);
@@ -204,7 +204,7 @@
     .etapa-opt.sel { border-color: var(--brand); background: var(--brand-soft); color: var(--brand-deep); }
     .etapa-opt.sel .num { background: var(--brand-grad); color: #fff; }
 
-    /* â”€â”€ DOCUMENTOS â”€â”€ */
+    /* ── DOCUMENTOS ── */
     .doc-item {
       display: flex; align-items: center; gap: 12px;
       padding: 14px; border-radius: 12px;
@@ -238,7 +238,7 @@
       box-shadow: 0 3px 10px rgba(224,27,27,.25); font-family: inherit;
     }
 
-    /* â”€â”€ HISTORIAL DE PAGOS â”€â”€ */
+    /* ── HISTORIAL DE PAGOS ── */
     .pago-row {
       padding: 12px 0; border-bottom: 1px solid var(--border);
       display: flex; align-items: center; gap: 12px;
@@ -257,7 +257,7 @@
     }
     .pago-dl svg { width: 14px; height: 14px; }
 
-    /* â”€â”€ LISTA DE CLIENTES â”€â”€ */
+    /* ── LISTA DE CLIENTES ── */
     .buscador { position: relative; margin-bottom: 12px; }
     .buscador input {
       width: 100%; padding: 13px 16px 13px 42px;
@@ -310,7 +310,7 @@
     .badge.e2 { background: #dbeafe; color: #1d4ed8; }
     .badge.e3 { background: var(--green-bg); color: var(--green); }
 
-    /* â”€â”€ RESUMEN â”€â”€ */
+    /* ── RESUMEN ── */
     .stats { display: flex; gap: 10px; margin-bottom: 14px; }
     .stat {
       flex: 1; background: #fff; border: 1px solid var(--border); border-radius: 14px;
@@ -320,7 +320,7 @@
     .stat .l { font-size: 10px; color: var(--muted); font-weight: 700; text-transform: uppercase;
       letter-spacing: .4px; margin-top: 2px; }
 
-    /* â”€â”€ ARCHIVO SOPORTE â”€â”€ */
+    /* ── ARCHIVO SOPORTE ── */
     .file-item {
       display: flex; align-items: center; gap: 12px;
       padding: 14px; background: #fff;
@@ -347,12 +347,12 @@
     }
     .preview-soporte img { display: block; width: 100%; height: auto; }
 
-    /* â”€â”€ PRECIO ROW â”€â”€ */
+    /* ── PRECIO ROW ── */
     .precio-row { display: flex; gap: 10px; }
     .precio-row select { width: 110px; flex-shrink: 0; }
     .precio-row input { flex: 1; }
 
-    /* â”€â”€ AVATAR â”€â”€ */
+    /* ── AVATAR ── */
     .avatar {
       width: 42px; height: 42px; border-radius: 50%; background: var(--brand-grad);
       color: #fff; font-size: 17px; font-weight: 800;
@@ -361,7 +361,7 @@
     }
     .avatar.sm { width: 38px; height: 38px; font-size: 15px; }
 
-    /* â”€â”€ PAGO INFO â”€â”€ */
+    /* ── PAGO INFO ── */
     .pago-nums { display: flex; gap: 0; margin: 14px 0 10px; }
     .pago-num { flex: 1; text-align: center; }
     .pago-num .valor { font-size: 18px; font-weight: 800; color: var(--black);
@@ -369,10 +369,10 @@
     .pago-num .lbl { font-size: 11px; color: var(--muted); margin-top: 2px; font-weight: 600; }
     .pago-num + .pago-num { border-left: 1px solid var(--border); }
 
-    /* â”€â”€ EMPTY â”€â”€ */
+    /* ── EMPTY ── */
     .empty-inline { text-align: center; padding: 22px 10px; color: var(--muted); font-size: 13px; }
 
-    /* â”€â”€ TOAST â”€â”€ */
+    /* ── TOAST ── */
     #toast {
       position: fixed; bottom: 110px; left: 50%;
       transform: translateX(-50%) translateY(16px);
@@ -384,7 +384,7 @@
     }
     #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    /* â”€â”€ LOADER â”€â”€ */
+    /* ── LOADER ── */
     #loader {
       display: none; position: fixed; inset: 0;
       background: rgba(255,255,255,.95); z-index: 9998;
@@ -392,7 +392,7 @@
     }
     #loader.show { display: flex; }
 
-    /* â”€â”€ OVERLAY REINTENTO â”€â”€ */
+    /* ── OVERLAY REINTENTO ── */
     #reintentoOverlay {
       display: none; position: fixed; inset: 0; z-index: 9997;
       background: rgba(23,24,28,.5); align-items: center; justify-content: center; padding: 24px;
@@ -418,7 +418,7 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     #loader p { font-size: 15px; font-weight: 700; color: var(--text); }
 
-    /* â”€â”€ Ã‰XITO â”€â”€ */
+    /* ── ÉXITO ── */
     .success-wrap {
       flex: 1; display: flex; flex-direction: column;
       align-items: center; justify-content: center; padding: 40px 30px; text-align: center;
@@ -446,9 +446,9 @@
 </head>
 <body>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-     PANTALLA 1 â€” LOGIN ASESOR
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ══════════════════════════════════════════
+     PANTALLA 1 — LOGIN ASESOR
+══════════════════════════════════════════ -->
 <div class="screen active" id="screenLogin">
   <div class="hero">
     <img src="logo-color.png" alt="Global Work Agency" width="173" height="64">
@@ -460,49 +460,49 @@
     <div class="card">
       <div class="card-title">Acceso</div>
       <div class="campo">
-        <label for="inputTelefono">Tu nÃºmero de celular</label>
+        <label for="inputTelefono">Tu número de celular</label>
         <input type="tel" id="inputTelefono" placeholder="+57 300 000 0000"
                autocomplete="tel" inputmode="tel">
       </div>
-      <button class="btn btn-primary" onclick="enviarOTP()">Enviar cÃ³digo â†’</button>
+      <button class="btn btn-primary" onclick="enviarOTP()">Enviar código →</button>
     </div>
     <p style="font-size:12px;color:var(--muted);text-align:center;line-height:1.6;">
       Solo asesores registrados en Global Work Agency.<br>
-      Â¿Eres cliente? <a href="index.html" style="color:var(--brand);font-weight:800;text-decoration:none;">Entra aquÃ­</a>
+      ¿Eres cliente? <a href="index.html" style="color:var(--brand);font-weight:800;text-decoration:none;">Entra aquí</a>
     </p>
-    <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:14px;opacity:.7;">VersiÃ³n 6</p>
+    <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:14px;opacity:.7;">Versión 7</p>
   </div>
 </div>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-     PANTALLA 2 â€” OTP
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ══════════════════════════════════════════
+     PANTALLA 2 — OTP
+══════════════════════════════════════════ -->
 <div class="screen" id="screenOtp">
   <div class="hero">
     <img src="logo-color.png" alt="Global Work Agency" width="173" height="64">
-    <h2>VerificaciÃ³n</h2>
-    <p id="otpSubtitulo">Ingresa el cÃ³digo que enviamos a tu celular</p>
+    <h2>Verificación</h2>
+    <p id="otpSubtitulo">Ingresa el código que enviamos a tu celular</p>
   </div>
   <div class="scroll">
     <div class="card">
       <div class="otp-grid" id="otpGrid">
-        <input class="otp-digit" type="tel" inputmode="numeric" maxlength="1" aria-label="DÃ­gito 1">
-        <input class="otp-digit" type="tel" inputmode="numeric" maxlength="1" aria-label="DÃ­gito 2">
-        <input class="otp-digit" type="tel" inputmode="numeric" maxlength="1" aria-label="DÃ­gito 3">
-        <input class="otp-digit" type="tel" inputmode="numeric" maxlength="1" aria-label="DÃ­gito 4">
-        <input class="otp-digit" type="tel" inputmode="numeric" maxlength="1" aria-label="DÃ­gito 5">
-        <input class="otp-digit" type="tel" inputmode="numeric" maxlength="1" aria-label="DÃ­gito 6">
+        <input class="otp-digit" type="tel" inputmode="numeric" maxlength="1" aria-label="Dígito 1">
+        <input class="otp-digit" type="tel" inputmode="numeric" maxlength="1" aria-label="Dígito 2">
+        <input class="otp-digit" type="tel" inputmode="numeric" maxlength="1" aria-label="Dígito 3">
+        <input class="otp-digit" type="tel" inputmode="numeric" maxlength="1" aria-label="Dígito 4">
+        <input class="otp-digit" type="tel" inputmode="numeric" maxlength="1" aria-label="Dígito 5">
+        <input class="otp-digit" type="tel" inputmode="numeric" maxlength="1" aria-label="Dígito 6">
       </div>
       <button class="btn btn-primary" onclick="verificarOTP()" style="margin-bottom:10px;">Verificar</button>
-      <button class="btn btn-secondary" onclick="reenviarOTP()" id="btnReenviar">Reenviar cÃ³digo</button>
+      <button class="btn btn-secondary" onclick="reenviarOTP()" id="btnReenviar">Reenviar código</button>
     </div>
-    <button class="btn btn-secondary" onclick="irA('screenLogin')">â† Cambiar nÃºmero</button>
+    <button class="btn btn-secondary" onclick="irA('screenLogin')">← Cambiar número</button>
   </div>
 </div>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-     PANTALLA 3 â€” LISTA DE CLIENTES
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ══════════════════════════════════════════
+     PANTALLA 3 — LISTA DE CLIENTES
+══════════════════════════════════════════ -->
 <div class="screen" id="screenClientes">
   <div class="app-header">
     <div class="avatar" id="asesorAvatar">?</div>
@@ -515,14 +515,14 @@
 
   <div class="scroll" id="clientesScroll">
     <div class="stats" id="statsWrap">
-      <div class="stat"><div class="v" id="stTotal">â€”</div><div class="l">Clientes</div></div>
-      <div class="stat"><div class="v" id="stProceso">â€”</div><div class="l">En proceso</div></div>
-      <div class="stat"><div class="v" id="stFin">â€”</div><div class="l">Finalizados</div></div>
+      <div class="stat"><div class="v" id="stTotal">—</div><div class="l">Clientes</div></div>
+      <div class="stat"><div class="v" id="stProceso">—</div><div class="l">En proceso</div></div>
+      <div class="stat"><div class="v" id="stFin">—</div><div class="l">Finalizados</div></div>
     </div>
 
     <div class="buscador">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-      <input type="search" id="inputBuscar" placeholder="Buscar por nombre o paÃ­s"
+      <input type="search" id="inputBuscar" placeholder="Buscar por nombre o país"
              oninput="renderClientes()" autocomplete="off">
     </div>
 
@@ -537,15 +537,15 @@
   </div>
 </div>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-     PANTALLA 4 â€” DETALLE DEL CLIENTE
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ══════════════════════════════════════════
+     PANTALLA 4 — DETALLE DEL CLIENTE
+══════════════════════════════════════════ -->
 <div class="screen" id="screenCliente">
   <div class="app-header">
-    <button class="back-btn" onclick="irA('screenClientes')" aria-label="Volver">â†</button>
+    <button class="back-btn" onclick="irA('screenClientes')" aria-label="Volver">←</button>
     <div class="header-info">
       <h1 id="cliNombre">Cliente</h1>
-      <p id="cliSub">â€”</p>
+      <p id="cliSub">—</p>
     </div>
     <img src="logo-color.png" alt="GWA" class="header-logo" width="65" height="24">
   </div>
@@ -558,8 +558,8 @@
       <div style="display:flex;align-items:center;gap:13px;margin-bottom:14px;">
         <div class="avatar sm" id="cliAvatar">?</div>
         <div style="min-width:0;">
-          <div style="font-size:15px;font-weight:800;" id="cliNombre2">â€”</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:2px;" id="cliTelefono">â€”</div>
+          <div style="font-size:15px;font-weight:800;" id="cliNombre2">—</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px;" id="cliTelefono">—</div>
         </div>
       </div>
       <a class="btn btn-wa" id="btnWA" href="#" target="_blank" rel="noopener">
@@ -602,15 +602,15 @@
   </div>
 </div>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-     PANTALLA 5 â€” REGISTRAR PAGO (solo precio + soporte)
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ══════════════════════════════════════════
+     PANTALLA 5 — REGISTRAR PAGO (solo precio + soporte)
+══════════════════════════════════════════ -->
 <div class="screen" id="screenPago">
   <div class="app-header">
-    <button class="back-btn" onclick="irA('screenCliente')" aria-label="Volver">â†</button>
+    <button class="back-btn" onclick="irA('screenCliente')" aria-label="Volver">←</button>
     <div class="header-info">
       <h1>Registrar pago</h1>
-      <p id="pagoCliente">â€”</p>
+      <p id="pagoCliente">—</p>
     </div>
     <img src="logo-color.png" alt="GWA" class="header-logo" width="65" height="24">
   </div>
@@ -642,14 +642,14 @@
   </div>
 
   <div class="bottom-bar">
-    <button class="btn btn-secondary btn-sm" onclick="irA('screenCliente')">AtrÃ¡s</button>
+    <button class="btn btn-secondary btn-sm" onclick="irA('screenCliente')">Atrás</button>
     <button class="btn btn-green" onclick="enviarPago()">Guardar pago</button>
   </div>
 </div>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-     PANTALLA 6 â€” PAGO GUARDADO
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ══════════════════════════════════════════
+     PANTALLA 6 — PAGO GUARDADO
+══════════════════════════════════════════ -->
 <div class="screen" id="screenPagoOk">
   <div class="success-wrap">
     <div class="success-icon-big">
@@ -657,7 +657,7 @@
     </div>
     <h2 style="font-size:22px;font-weight:800;letter-spacing:-.02em;">Pago registrado</h2>
     <p style="font-size:14px;color:var(--muted);line-height:1.6;margin-top:10px;max-width:280px;">
-      El soporte quedÃ³ guardado y el cliente ya lo verÃ¡ en su app.
+      El soporte quedó guardado y el cliente ya lo verá en su app.
     </p>
     <button class="btn btn-primary" style="margin-top:26px;max-width:280px;"
             onclick="abrirCliente(clienteActual)">Volver al cliente</button>
@@ -678,9 +678,9 @@
 </div>
 
 <script>
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   CONFIGURACIÃ“N â€” endpoints reales de n8n
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ══════════════════════════════════════════
+   CONFIGURACIÓN — endpoints reales de n8n
+══════════════════════════════════════════ */
 const BASE = "https://app.rioagencymarketing.com/webhook";
 const WH = {
   login:      BASE + "/asesor-login",
@@ -694,7 +694,7 @@ const WH = {
 
 const ETAPAS = ["Perfilado", "Documentos", "En proceso", "Finalizado"];
 
-// IDs de las etapas en el pipeline de GHL (Ã­ndice = etapaIndex)
+// IDs de las etapas en el pipeline de GHL (índice = etapaIndex)
 const STAGE_IDS = [
   "49c81ecd-195b-436f-8914-ccb5744baa2b", // 0 Perfilado
   "553471ca-d2f3-4551-965d-2149d924e48e", // 1 Documentos
@@ -716,9 +716,9 @@ const ICONS = {
   chevron: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>'
 };
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ══════════════════════════════════════════
    ESTADO
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+══════════════════════════════════════════ */
 let sesion = null;
 try { sesion = JSON.parse(sessionStorage.getItem("gwa_asesor")); } catch(e){}
 
@@ -726,35 +726,35 @@ let perfilados = [];        // lista devuelta por asesor-perfilados
 let filtroEtapa = -1;       // -1 = todas
 let clienteActual = null;   // detalle del cliente abierto
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   NAVEGACIÃ“N
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ══════════════════════════════════════════
+   NAVEGACIÓN
+══════════════════════════════════════════ */
 function irA(id) {
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
   window.scrollTo(0, 0);
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ══════════════════════════════════════════
    LOGIN / OTP
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+══════════════════════════════════════════ */
 async function enviarOTP() {
   const tel = document.getElementById("inputTelefono").value.trim();
-  if (!tel || tel.replace(/\D/g,"").length < 7) { toast("Ingresa un nÃºmero vÃ¡lido"); return; }
-  showLoader("Enviando cÃ³digo...");
+  if (!tel || tel.replace(/\D/g,"").length < 7) { toast("Ingresa un número válido"); return; }
+  showLoader("Enviando código...");
   try {
     const r = await post(WH.login, { telefono: tel });
     hideLoader();
     if (r.ok) {
       document.getElementById("otpSubtitulo").textContent =
-        "Ingresa el cÃ³digo que enviamos a " + tel;
+        "Ingresa el código que enviamos a " + tel;
       document.querySelectorAll(".otp-digit").forEach(i => i.value = "");
       irA("screenOtp");
       setTimeout(() => document.querySelector(".otp-digit").focus(), 250);
     } else {
-      toast(r.error || r.mensaje || "No encontramos un asesor con ese nÃºmero");
+      toast(r.error || r.mensaje || "No encontramos un asesor con ese número");
     }
-  } catch(e) { hideLoader(); toast("Error de conexiÃ³n"); }
+  } catch(e) { hideLoader(); toast("Error de conexión"); }
 }
 
 document.querySelectorAll(".otp-digit").forEach((inp, i, all) => {
@@ -781,7 +781,7 @@ function getOTP() {
 
 async function verificarOTP() {
   const otp = getOTP();
-  if (otp.length !== 6) { toast("Ingresa los 6 dÃ­gitos"); return; }
+  if (otp.length !== 6) { toast("Ingresa los 6 dígitos"); return; }
   const tel = document.getElementById("inputTelefono").value.trim();
   showLoader("Verificando...");
   try {
@@ -795,11 +795,11 @@ async function verificarOTP() {
       sessionStorage.setItem("gwa_asesor", JSON.stringify(sesion));
       cargarClientes();
     } else {
-      toast(r.error || r.mensaje || "CÃ³digo incorrecto");
+      toast(r.error || r.mensaje || "Código incorrecto");
       document.querySelectorAll(".otp-digit").forEach(i => i.value = "");
       document.querySelector(".otp-digit").focus();
     }
-  } catch(e) { hideLoader(); toast("Error de conexiÃ³n"); }
+  } catch(e) { hideLoader(); toast("Error de conexión"); }
 }
 
 async function reenviarOTP() {
@@ -808,14 +808,14 @@ async function reenviarOTP() {
   await enviarOTP();
   let s = 30;
   const t = setInterval(() => {
-    btn.textContent = `Reenviar cÃ³digo (${s}s)`;
-    if (--s < 0) { clearInterval(t); btn.disabled = false; btn.textContent = "Reenviar cÃ³digo"; }
+    btn.textContent = `Reenviar código (${s}s)`;
+    if (--s < 0) { clearInterval(t); btn.disabled = false; btn.textContent = "Reenviar código"; }
   }, 1000);
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ══════════════════════════════════════════
    LISTA DE CLIENTES
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+══════════════════════════════════════════ */
 async function cargarClientes() {
   if (!sesion?.asesorId) { irA("screenLogin"); return; }
   showLoader("Cargando tus clientes...");
@@ -844,7 +844,7 @@ async function cargarClientes() {
     renderFiltros();
     renderClientes();
     irA("screenClientes");
-  } catch(e) { hideLoader(); toast("Error de conexiÃ³n"); }
+  } catch(e) { hideLoader(); toast("Error de conexión"); }
 }
 
 function renderFiltros() {
@@ -884,12 +884,12 @@ function renderClientes() {
     btn.className = "cliente-item";
     btn.style.animationDelay = Math.min(idx * .04, .4) + "s";
     btn.onclick = () => abrirCliente(c);
-    const metaAdmin = sesion.isAdmin && c.asesorNombre ? " Â· " + esc(c.asesorNombre) : "";
+    const metaAdmin = sesion.isAdmin && c.asesorNombre ? " · " + esc(c.asesorNombre) : "";
     btn.innerHTML = `
       <div class="avatar sm">${((c.nombre || "?").trim()[0] || "?").toUpperCase()}</div>
       <div class="cliente-info">
         <div class="cliente-nombre">${esc((c.nombre || "Sin nombre").trim())}</div>
-        <div class="cliente-meta">${esc(c.pais || "Sin paÃ­s")}${metaAdmin}</div>
+        <div class="cliente-meta">${esc(c.pais || "Sin país")}${metaAdmin}</div>
         ${et >= 0 ? `<span class="badge e${et}">${esc(c.etapaLabel || ETAPAS[et])}</span>`
                   : `<span class="badge">Sin proceso</span>`}
       </div>
@@ -898,16 +898,16 @@ function renderClientes() {
   });
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ══════════════════════════════════════════
    DETALLE DEL CLIENTE
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+══════════════════════════════════════════ */
 async function abrirCliente(item) {
   // item puede ser el objeto de la lista o el clienteActual (al volver del pago)
   const contactId = item && item.contactId;
   if (!contactId) return;
   showLoader("Cargando cliente...");
   try {
-    // Reintenta ante respuesta vacÃ­a (cuota de Sheets) o caÃ­da de red
+    // Reintenta ante respuesta vacía (cuota de Sheets) o caída de red
     let r = await post(WH.detalle, { contactId });
     const esperas = [1000, 1500, 2500, 3500, 5000];
     for (let intento = 0; (r.vacio || r.neterror) && intento < esperas.length; intento++) {
@@ -923,12 +923,12 @@ async function abrirCliente(item) {
     clienteActual.opportunityId = r.opportunityId || (item && item.opportunityId) || "";
     renderCliente(clienteActual, item);
     irA("screenCliente");
-  } catch(e) { hideLoader(); toast("Error de conexiÃ³n"); }
+  } catch(e) { hideLoader(); toast("Error de conexión"); }
 }
 
 function mostrarReintento(item, motivo) {
   document.getElementById("reintentoMsg").textContent =
-    String(motivo || "Puede ser saturaciÃ³n momentÃ¡nea del servidor.");
+    String(motivo || "Puede ser saturación momentánea del servidor.");
   const ov = document.getElementById("reintentoOverlay");
   ov.classList.add("show");
   document.getElementById("btnReintentar").onclick = () => {
@@ -945,9 +945,9 @@ function renderCliente(d, item) {
   document.getElementById("cliNombre").textContent  = nombre;
   document.getElementById("cliNombre2").textContent = nombre;
   document.getElementById("cliAvatar").textContent  = nombre[0].toUpperCase();
-  document.getElementById("cliTelefono").textContent = telefono || "Sin telÃ©fono";
+  document.getElementById("cliTelefono").textContent = telefono || "Sin teléfono";
   document.getElementById("cliSub").textContent =
-    [ed["Pais Destino"] || (item && item.pais), ed["Correo"]].filter(Boolean).join(" Â· ") || "Global Work Agency";
+    [ed["Pais Destino"] || (item && item.pais), ed["Correo"]].filter(Boolean).join(" · ") || "Global Work Agency";
   document.getElementById("pagoCliente").textContent = nombre;
 
   // WhatsApp
@@ -967,7 +967,7 @@ function renderCliente(d, item) {
   renderDocs(d.documentos || {});
 }
 
-/* â”€â”€ ETAPAS â”€â”€ */
+/* ── ETAPAS ── */
 function renderEtapas(etapaActual) {
   const wrap = document.getElementById("etapasWrap");
   const labels = document.getElementById("etapasLabels");
@@ -976,7 +976,7 @@ function renderEtapas(etapaActual) {
   ETAPAS.forEach((nombre, i) => {
     const dot = document.createElement("div");
     dot.className = "etapa-dot" + (i < etapaActual ? " done" : i === etapaActual ? " active" : "");
-    dot.textContent = i < etapaActual ? "âœ“" : i + 1;
+    dot.textContent = i < etapaActual ? "✓" : i + 1;
     wrap.appendChild(dot);
     if (i < ETAPAS.length - 1) {
       const l = document.createElement("div");
@@ -1001,11 +1001,11 @@ function renderEtapas(etapaActual) {
 }
 
 async function cambiarEtapa(nuevaIdx, nombre, actualIdx) {
-  if (nuevaIdx === actualIdx) { toast("El cliente ya estÃ¡ en esta etapa"); return; }
+  if (nuevaIdx === actualIdx) { toast("El cliente ya está en esta etapa"); return; }
   if (!clienteActual.opportunityId) {
     toast("Este cliente no tiene oportunidad en el pipeline"); return;
   }
-  if (!confirm(`Â¿Mover a ${clienteActual.editable?.["Nombre Completo"] || "el cliente"} a la etapa "${nombre}"?`)) return;
+  if (!confirm(`¿Mover a ${clienteActual.editable?.["Nombre Completo"] || "el cliente"} a la etapa "${nombre}"?`)) return;
   showLoader("Actualizando etapa...");
   try {
     const r = await post(WH.etapa, {
@@ -1023,10 +1023,10 @@ async function cambiarEtapa(nuevaIdx, nombre, actualIdx) {
       renderFiltros();
     }
     toast(`Cliente movido a "${nombre}"`);
-  } catch(e) { hideLoader(); toast("Error de conexiÃ³n"); }
+  } catch(e) { hideLoader(); toast("Error de conexión"); }
 }
 
-/* â”€â”€ PAGOS â”€â”€ */
+/* ── PAGOS ── */
 function renderPagos(d) {
   const p = d.pago || {};
   const total = Number(p.total || 0);
@@ -1044,7 +1044,7 @@ function renderPagos(d) {
   wrap.innerHTML = "";
   const historial = d.historialPagos || [];
   if (!historial.length) {
-    wrap.innerHTML = `<div class="empty-inline">AÃºn no hay pagos con soporte.</div>`;
+    wrap.innerHTML = `<div class="empty-inline">Aún no hay pagos con soporte.</div>`;
     return;
   }
   historial.forEach(a => {
@@ -1061,7 +1061,7 @@ function renderPagos(d) {
   });
 }
 
-/* â”€â”€ DOCUMENTOS â”€â”€ */
+/* ── DOCUMENTOS ── */
 function renderDocs(documentos) {
   const wrap = document.getElementById("docsWrap");
   wrap.innerHTML = "";
@@ -1106,9 +1106,9 @@ function subirDoc(key, label) {
   inp.click();
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ══════════════════════════════════════════
    REGISTRAR PAGO (solo precio + soporte)
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+══════════════════════════════════════════ */
 function irAPago() {
   document.getElementById("pagoValor").value = "";
   document.getElementById("file-soporte").value = "";
@@ -1128,7 +1128,7 @@ function onSoporteChange(inp) {
     st.textContent = "Foto o PDF del comprobante"; st.className = "file-st";
     fi.classList.remove("ok"); prev.style.display = "none"; return;
   }
-  st.textContent = `âœ“ ${f.name} (${(f.size/1024).toFixed(0)} KB)`;
+  st.textContent = `✓ ${f.name} (${(f.size/1024).toFixed(0)} KB)`;
   st.className = "file-st ok";
   fi.classList.add("ok");
   if (f.type.startsWith("image/")) {
@@ -1165,12 +1165,12 @@ async function enviarPago() {
     hideLoader();
     if (r && r.ok === false) { toast(r.error || r.mensaje || "No se pudo guardar el pago"); return; }
     irA("screenPagoOk");
-  } catch(e) { hideLoader(); toast("Error de conexiÃ³n. Intenta de nuevo."); }
+  } catch(e) { hideLoader(); toast("Error de conexión. Intenta de nuevo."); }
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   SESIÃ“N
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ══════════════════════════════════════════
+   SESIÓN
+══════════════════════════════════════════ */
 function cerrarSesion() {
   sesion = null; perfilados = []; clienteActual = null;
   sessionStorage.removeItem("gwa_asesor");
@@ -1179,15 +1179,15 @@ function cerrarSesion() {
   irA("screenLogin");
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ══════════════════════════════════════════
    HELPERS
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+══════════════════════════════════════════ */
 async function parseSafe(r) {
-  // El webhook a veces responde 200 con cuerpo vacÃ­o; no reventamos.
+  // El webhook a veces responde 200 con cuerpo vacío; no reventamos.
   const txt = await r.text();
-  if (!txt || !txt.trim()) return { ok: false, vacio: true, error: "El servidor no respondiÃ³, intenta de nuevo." };
+  if (!txt || !txt.trim()) return { ok: false, vacio: true, error: "El servidor no respondió, intenta de nuevo." };
   try { return JSON.parse(txt); }
-  catch(e) { return { ok: false, error: "Respuesta no vÃ¡lida del servidor." }; }
+  catch(e) { return { ok: false, error: "Respuesta no válida del servidor." }; }
 }
 async function post(url, data) {
   try {
@@ -1195,7 +1195,7 @@ async function post(url, data) {
       headers:{"Content-Type":"application/json"}, body: JSON.stringify(data) });
     return parseSafe(r);
   } catch(e) {
-    return { ok: false, neterror: true, error: "Sin conexiÃ³n, reintentando..." };
+    return { ok: false, neterror: true, error: "Sin conexión, reintentando..." };
   }
 }
 async function fetchFD(url, fd) {
@@ -1203,7 +1203,7 @@ async function fetchFD(url, fd) {
     const r = await fetch(url, { method:"POST", body: fd });
     return parseSafe(r);
   } catch(e) {
-    return { ok: false, neterror: true, error: "Sin conexiÃ³n, reintentando..." };
+    return { ok: false, neterror: true, error: "Sin conexión, reintentando..." };
   }
 }
 
@@ -1230,9 +1230,9 @@ function toast(msg, ms = 3000) {
   setTimeout(() => el.classList.remove("show"), ms);
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ══════════════════════════════════════════
    INIT
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+══════════════════════════════════════════ */
 if (sesion?.asesorId) { cargarClientes(); }
 </script>
 </body>
