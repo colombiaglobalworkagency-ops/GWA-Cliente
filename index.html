@@ -691,14 +691,6 @@
           <option value="3_meses">Proceso a 3 meses</option>
         </select>
       </div>
-      <div class="campo">
-        <label>Divisa de pago <span style="color:var(--brand)">*</span></label>
-        <select name="divisa" id="divisaPerfil" required>
-          <option value="COP">$ COP — $90.000</option>
-          <option value="USD">$ USD — $32</option>
-          <option value="EUR">€ EUR — €28</option>
-        </select>
-      </div>
     </div>
 
     <!-- PASO 2 -->
@@ -1255,7 +1247,10 @@ async function enviarPerfilamiento() {
   if (!sesion?.contactId) { toast("Sesión expirada"); irA("screenLogin"); return; }
   const fd = new FormData();
   fd.append("contactId", sesion.contactId);
-  fd.append("divisa", document.getElementById("divisaPerfil").value || "COP");
+  // Divisa automática por nacionalidad: Colombia -> COP $150.000, resto de LATAM -> EUR €37
+  const nac = (document.querySelector('#screenPerfilamiento [name="nacionalidad"]')?.value || "").toLowerCase();
+  const divisaAuto = nac.includes("colomb") ? "COP" : "EUR";
+  fd.append("divisa", divisaAuto);
   document.querySelectorAll("#screenPerfilamiento input, #screenPerfilamiento select, #screenPerfilamiento textarea")
     .forEach(f => {
       if (!f.name) return;
