@@ -820,8 +820,9 @@ async function verificarOTP() {
   try {
     const r = await post(WH.otp, { telefono: tel, otp });
     hideLoader();
-    if (r.ok && r.asesorId) {
+    if (r.ok && r.token) {
       sesion = {
+        token: r.token,
         asesorId: r.asesorId, nombre: r.nombre || "",
         isAdmin: r.isAdmin === true, telefono: tel
       };
@@ -850,14 +851,14 @@ async function reenviarOTP() {
    LISTA DE CLIENTES
 ══════════════════════════════════════════ */
 async function cargarClientes() {
-  if (!sesion?.asesorId) { irA("screenLogin"); return; }
+  if (!sesion?.token) { irA("screenLogin"); return; }
   showLoader("Cargando tus clientes...");
   try {
-    let r = await post(WH.perfilados, { asesorId: sesion.asesorId, isAdmin: !!sesion.isAdmin });
+    let r = await post(WH.perfilados, { token: sesion.token });
     const esperas = [1000, 1500, 2500, 3500];
     for (let i = 0; (r.vacio || r.neterror) && i < esperas.length; i++) {
       await new Promise(res => setTimeout(res, esperas[i]));
-      r = await post(WH.perfilados, { asesorId: sesion.asesorId, isAdmin: !!sesion.isAdmin });
+      r = await post(WH.perfilados, { token: sesion.token });
     }
     hideLoader();
     if (!r.ok) { toast(r.error || r.mensaje || "No se pudieron cargar los clientes"); return; }
@@ -964,12 +965,12 @@ async function abrirCliente(item) {
   showLoader("Cargando cliente...");
   try {
     // Reintenta ante respuesta vacía (cuota de Sheets) o caída de red
-    let r = await post(WH.detalle, { contactId });
+    let r = await post(WH.detalle, { token: sesion.token, contactId });
     const esperas = [1000, 1500, 2500, 3500, 5000];
     for (let intento = 0; (r.vacio || r.neterror) && intento < esperas.length; intento++) {
       showLoader("Cargando cliente" + ".".repeat((intento % 3) + 1));
       await new Promise(res => setTimeout(res, esperas[intento]));
-      r = await post(WH.detalle, { contactId });
+      r = await post(WH.detalle, { token: sesion.token, contactId });
     }
     hideLoader();
     if (!r.ok) { mostrarReintento(item, r.error || r.mensaje); return; }
@@ -1067,6 +1068,7 @@ async function cambiarEtapa(nuevaIdx, nombre, actualIdx) {
   showLoader("Actualizando etapa...");
   try {
     const r = await post(WH.etapa, {
+      token: sesion.token,
       opportunityId: clienteActual.opportunityId,
       stageId: STAGE_IDS[nuevaIdx],
       etapaIndex: nuevaIdx
@@ -1174,8 +1176,8 @@ async function enviarNota() {
   showLoader("Enviando notificación...");
   try {
     const r = await post(WH.nota, {
+      token: sesion.token,
       contactId: clienteActual.contactId,
-      asesorId: sesion.asesorId || "",
       texto: texto
     });
     hideLoader();
@@ -1312,7 +1314,7 @@ function toast(msg, ms = 3000) {
 /* ══════════════════════════════════════════
    INIT
 ══════════════════════════════════════════ */
-if (sesion?.asesorId) { cargarClientes(); }
+if (sesion?.token) { cargarClientes(); }
 
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("sw.js").catch(() => {});
