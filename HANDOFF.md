@@ -1,6 +1,6 @@
 # Hand-off — GWA Cliente / Asesores
 
-Estado del proyecto al 2026-07-28. PWA sin build (HTML/CSS/JS plano) servida por
+Estado del proyecto al 2026-07-29. PWA sin build (HTML/CSS/JS plano) servida por
 **GitHub Pages** en el dominio **`app.globalworkagency.com`** (CNAME en el repo).
 
 ## URLs en producción
@@ -81,11 +81,57 @@ nota con el prefijo `[cliente]`. Probado end-to-end.
 - **Codificación:** editar `asesor.html`/`index.html` solo con editores UTF-8. NO usar
   `Set-Content -Encoding UTF8` de PowerShell 5.1 (corrompió acentos una vez; se revirtió).
 
+---
+
+## Seguridad — endurecimiento (2026-07-29)
+
+### 1. Firma del webhook de Bold (anti pagos falsos) — ACTIVO
+El webhook `bold-pago-perfilamiento` ahora **valida la firma HMAC de Bold** antes de
+procesar. Sin firma válida → no crea oportunidad ni toca el Sheet (nodo *Firma Rechazada*).
+- Header `x-bold-signature`, HMAC-SHA256 sobre `base64(cuerpo_crudo)`, hex.
+- Se habilitó **Raw Body** en el nodo *Webhook Bold*; dos nodos Crypto (*HMAC b64* / *HMAC raw*)
+  cubren ambas variantes. IF *Firma Valida?* enruta.
+- ⚠️ La **llave secreta de Bold** se pegó por chat una vez → **ROTARLA** en Bold y
+  actualizar el campo *secret* de los nodos *HMAC b64* y *HMAC raw*.
+- Backup del flujo previo: `bold_backup_pre_sig.json` (temporal local, no en repo).
+- Ojo: ahora el webhook **rechaza POST sin firma válida** (pruebas manuales incluidas). El
+  botón "Probar el webhook" de Bold sí firma, así que pasa.
+
+### 2. Panel de asesores — token de sesión firmado — ACTIVO (falta merge del front)
+El backend ya **no confía** en `asesorId`/`isAdmin` que mande el navegador.
+- `asesor-verificar-otp` emite un **token firmado** (HMAC-SHA256 con un *secreto de servidor*)
+  con `{asesorId, isAdmin, exp:+24h}`. Formato `base64(payload).hmacHex`.
+- Los 5 endpoints (`asesor-perfilados`, `asesor-detalle`, `asesor-editar`, `asesor-etapa`,
+  `asesor-nota`) tienen una puerta *Extraer Token → Verify HMAC → Validar Token → Token Valido?*
+  que verifica la firma y saca la identidad **del token**. Token inválido/expirado → 401.
+- **Autorización por propiedad:** no-admin solo ve/edita/mueve/notifica a SUS clientes
+  (owner de la oportunidad); admin, todos. Nodos *Opp Owner → Check Owner → Autorizado?* (403).
+- El **secreto de servidor** vive solo en los nodos de n8n (no en repo ni chat). No rotar.
+- ⚠️ **El front debe merjear el PR #8** o el panel en vivo responde "sesión inválida"
+  (backend ya exige token, front viejo no lo envía). Tras merge, los asesores re-inician sesión 1 vez.
+
+### PRs abiertos (al 2026-07-29)
+- **#8** `seguridad-tokens-asesor` → **merjear (urgente)**: front del panel envía el token.
+- **#7** `fix-manifest-starturl` → merjear: `manifest.json` del cliente a `start_url` relativo.
+- **#6** `panel-asesores` (asesores.html) → **cerrar sin merge**: obsoleto, el panel es `asesor.html`.
+
+### Aún SIN blindar (writes compartidos)
+- `cliente-subir-documento`: compartido con la app del cliente (no se puede exigir token de asesor).
+- `registrar-abono` (registrar pago del asesor, suma a `Pagado`): flujo "GLOBAL"; solo lo usa el
+  panel hoy, pero podría tener otros llamadores. **Recomendado blindarlo** (token + propiedad)
+  tras confirmar que nada más lo llama.
+
+---
+
 ## Pendientes / decisiones abiertas
+- **Rotar la llave secreta de Bold** (ver Seguridad §1) y blindar `registrar-abono` (§ Aún sin blindar).
 - Prueba de **pago real** con monto chico (solo el dueño puede: implica pagar) para validar
   el ciclo completo perfilamiento/abono → registro en proceso y Sheet.
 - Origen del cliente se infiere por **nacionalidad**; alternativa: país de residencia o
   indicativo del celular. Confirmar si se cambia.
 - Opcional: mostrar el precio (€37 / $150.000) al final del formulario antes de ir a Bold.
-- `index.html`: su `manifest.json` tiene `start_url` con la ruta vieja `/GWA-Cliente/…`,
-  que en el dominio nuevo puede fallar al abrir la PWA instalada. Conviene volverlo relativo.
+- `index.html` `manifest.json` `start_url` con ruta vieja `/GWA-Cliente/…` → **arreglado en PR #7**
+  (relativo `index.html` + `scope ./`). Merjear para cerrar.
+- **Repo público:** el código servido y `HANDOFF.md`/`ASESORES.md` son visibles en github.com.
+  La seguridad NO depende de ocultar el código (las llaves viven en n8n), pero considerar repo
+  privado o mover estos .md fuera del repo si se quiere reducir exposición de la infra.
