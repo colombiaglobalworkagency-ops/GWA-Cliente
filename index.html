@@ -1106,6 +1106,7 @@ function renderDashboard(d) {
         <label>${label}</label>
         <div class="doc-status ${link ? 'ok' : 'missing'}">${link ? "✓ Recibido" : "✗ Pendiente"}</div>
       </div>
+      ${link && urlSegura(link) !== "#" ? `<a class="doc-upload-btn" href="${esc(urlSegura(link))}" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center;">Ver</a>` : ""}
       ${!link ? `<button class="doc-upload-btn" onclick="subirDocFaltante('${key}','${label}')">Subir</button>` : ""}
     `;
     docsWrap.appendChild(div);
