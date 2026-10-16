@@ -2,6 +2,13 @@
 
 Cursos por módulos, en escalera de lo básico a lo avanzado, con **desbloqueo secuencial**: el módulo N+1 se abre solo cuando el usuario terminó de ver el módulo N. Existe en la app del cliente (`index.html`) y en el panel de asesores (`asesor.html`).
 
+## Cómo se ve (tres pantallas)
+1. **Cursos:** tarjetas con imagen de portada, título, descripción, barra de avance, "X de N módulos" y el porcentaje. Se llega desde la tarjeta **Educación** (botón *Ver cursos*) del dashboard o del panel de asesores.
+2. **Módulos del curso elegido:** "Tu avance", botón *Empezar/Continuar*, y los módulos por nivel (bloqueado / en curso / completado).
+3. **Reproductor:** video, resumen y *Siguiente módulo* (siempre dentro del mismo curso).
+
+Cada curso del catálogo puede traer `titulo`, `descripcion`, `imagen` (URL https) y `orden` (los cursos salen ordenados por `orden`; sin él quedan al final). Se publican con `educacion_publicar.js --descripcion ... --imagen ... --orden N`.
+
 ## Piezas
 | Pieza | Dónde |
 |---|---|
@@ -21,7 +28,7 @@ Cursos por módulos, en escalera de lo básico a lo avanzado, con **desbloqueo s
 
 ## Agregar o cambiar un curso (sin tocar código)
 1. Preparar el catálogo JSON: `{ "curso": "...", "audiencia": ["cliente","asesor"], "niveles": [ { "nivel": 1, "nombre": "...", "modulos": [ { "id": "cli-01", "titulo": "...", "resumen": "...", "segundos": 418 } ] } ] }`. El orden de los módulos es el orden de desbloqueo.
-2. Subir los videos al Release y armar `urls.json` (`{ "cli-01": "https://github.com/.../releases/download/.../cli-01-xxxx.mp4" }`).
+2. Subir los videos al repo de videos (GitHub Pages) y armar `urls.json` (`{ "cli-01": "https://github.com/.../releases/download/.../cli-01-xxxx.mp4" }`).
 3. Publicar: `node GWA/scripts/educacion_publicar.js catalogo.json --urls urls.json --aplicar`.
 
 Para quitar un curso, poner `activo = false` en su fila de `edu_cursos`.
